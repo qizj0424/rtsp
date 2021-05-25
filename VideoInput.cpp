@@ -28,8 +28,8 @@
 
 #define TAG 						"sample-RTSPServer"
 
-//int gconf_Main_VideoWidth = CONFIG_VIDEO_WIDTH;
-//int gconf_Main_VideoHeight = CONFIG_VIDEO_HEIGHT;
+int gconf_Main_VideoWidth = CONFIG_VIDEO_WIDTH;
+int gconf_Main_VideoHeight = CONFIG_VIDEO_HEIGHT;
 
 IMPEncoderProfile gconf_mainPayLoad =  IMP_ENC_PROFILE_AVC_MAIN;//IMP_ENC_PROFILE_HEVC_MAIN;
 IMPEncoderRcMode gconf_defRC = IMP_ENC_RC_MODE_CAPPED_QUALITY;
@@ -113,7 +113,7 @@ static int encoder_init(void)
         int  grpNum = 0;
 	IMPEncoderChnAttr chnAttr;
 
-	encoder_param_defalt(&chnAttr, gconf_mainPayLoad, gconf_defRC,CONFIG_VIDEO_WIDTH,CONFIG_VIDEO_HEIGHT, CONFIG_FPS_NUM, CONFIG_FPS_DEN,BITRATE_720P_Kbs);
+	encoder_param_defalt(&chnAttr, gconf_mainPayLoad, gconf_defRC,gconf_Main_VideoWidth,gconf_Main_VideoHeight, CONFIG_FPS_NUM, CONFIG_FPS_DEN,BITRATE_720P_Kbs);
 
 		/* Creat Encoder Group */
 			ret = IMP_Encoder_CreateGroup(grpNum);
@@ -212,13 +212,13 @@ static int imp_init(void)
 	imp_chn_attr[0].crop.top = 0;
 	imp_chn_attr[0].crop.left = 0;
 
-	imp_chn_attr[0].crop.width = CONFIG_VIDEO_WIDTH;
-	imp_chn_attr[0].crop.height = CONFIG_VIDEO_HEIGHT;
+	imp_chn_attr[0].crop.width = gconf_Main_VideoWidth;
+	imp_chn_attr[0].crop.height = gconf_Main_VideoHeight;
 
 	imp_chn_attr[0].scaler.enable = 0;
 
-	imp_chn_attr[0].picWidth = CONFIG_VIDEO_WIDTH;
-	imp_chn_attr[0].picHeight = CONFIG_VIDEO_HEIGHT;
+	imp_chn_attr[0].picWidth = gconf_Main_VideoWidth;
+	imp_chn_attr[0].picHeight = gconf_Main_VideoHeight;
 
 	ret = framesource_init(imp_chn_attr);
         if (ret < 0) {

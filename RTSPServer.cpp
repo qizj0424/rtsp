@@ -11,7 +11,6 @@
 #include "VideoInput.hh"
 #include "RTSPServer.hh"
 #include <stdio.h>
-#include "/home/zjqi/isvp/proj/application/carrier-server-t31-20201226/Options.hh"
 
 portNumBits rtspServerPortNum = 8554;
 char* streamDescription = strDup("RTSP/RTP stream from Ingenic Media");

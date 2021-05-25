@@ -12,8 +12,6 @@
 #include <signal.h>
 #include <stdlib.h>
 
-//#include "Options.hh"
-#include "/home/zjqi/isvp/proj/application/carrier-server-t31-20201226/Options.hh"
 #include "H264VideoStreamSource.hh"
 
 static void* PollingThread(void *p);

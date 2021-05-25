@@ -30,7 +30,6 @@ using namespace std;
 #define CONFIG_FPS_DEN			1
 #define CONFIG_VIDEO_WIDTH		1920
 #define CONFIG_VIDEO_HEIGHT		1080
-#define CONFIG_VIDEO_BITRATE 	6000
 #define CHN0_EN                 1
 #define CHN1_EN                 0
 #define CHN2_EN                 0

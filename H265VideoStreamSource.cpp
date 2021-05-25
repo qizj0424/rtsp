@@ -12,7 +12,6 @@
 #include <signal.h>
 #include <stdlib.h>
 
-//#include "Options.hh"
 #include "H265VideoStreamSource.hh"
 
 static void* PollingThread(void *p);

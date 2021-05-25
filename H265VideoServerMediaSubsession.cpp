@@ -12,7 +12,6 @@
 #include "H265VideoStreamDiscreteFramer.hh"
 #include "ByteStreamFileSource.hh"
 #include "VideoInput.hh"
-//#include "Options.hh"
 
 extern int gconf_Main_VideoWidth;
 extern int gconf_Main_VideoHeight;

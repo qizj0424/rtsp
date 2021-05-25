@@ -12,10 +12,9 @@
 #include "H264VideoStreamDiscreteFramer.hh"
 #include "ByteStreamFileSource.hh"
 #include "VideoInput.hh"
-//#include "/home/zjqi/isvp/proj/application/carrier-server-t31-20201226/Options.hh"
 
-int gconf_Main_VideoWidth = 1920;
-int gconf_Main_VideoHeight = 1080;
+extern int gconf_Main_VideoWidth;
+extern int gconf_Main_VideoHeight;
 
 H264VideoServerMediaSubsession*
 H264VideoServerMediaSubsession
