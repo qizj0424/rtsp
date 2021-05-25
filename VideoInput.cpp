@@ -28,24 +28,10 @@
 
 #define TAG 						"sample-RTSPServer"
 
+//int gconf_Main_VideoWidth = CONFIG_VIDEO_WIDTH;
+//int gconf_Main_VideoHeight = CONFIG_VIDEO_HEIGHT;
 
-#define CONFIG_SENSOR_NAME		"jxf23"
-#define CONFIG_SENSOR_CUBS_TYPE        TX_SENSOR_CONTROL_INTERFACE_I2C
-#define CONFIG_SENSOR_ADDR		0x40
-#define CONFIG_FPS_NUM			15
-#define CONFIG_FPS_DEN			1
-#define CONFIG_VIDEO_WIDTH		1920
-#define CONFIG_VIDEO_HEIGHT		1080
-#define CONFIG_VIDEO_BITRATE 	6000
-#define CHN0_EN                 1
-#define CHN1_EN                 0
-#define CHN2_EN                 0
-#define CHN3_EN                 1
-
-#define BITRATE_720P_Kbs        1000
-
-
-IMPEncoderProfile gconf_mainPayLoad =  IMP_ENC_PROFILE_AVC_HIGH;
+IMPEncoderProfile gconf_mainPayLoad =  IMP_ENC_PROFILE_AVC_MAIN;//IMP_ENC_PROFILE_HEVC_MAIN;
 IMPEncoderRcMode gconf_defRC = IMP_ENC_RC_MODE_CAPPED_QUALITY;
 
 Boolean VideoInput::fpsIsOn[MAX_STREAM_CNT] = {False, False};

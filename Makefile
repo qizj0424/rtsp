@@ -1,5 +1,5 @@
 
-SRC_FILE = H264VideoServerMediaSubsession.o H264VideoStreamSource.o RTSPServer.o VideoInput.o
+SRC_FILE = H264VideoServerMediaSubsession.o H265VideoServerMediaSubsession.o H264VideoStreamSource.o H265VideoStreamSource.o RTSPServer.o VideoInput.o
 EXT_LIB = -L./live555/prebuilt/lib/uclibc/
 
 SRC_DIR = $(shell ls -R | grep ":")

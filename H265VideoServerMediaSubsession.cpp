@@ -1,47 +1,47 @@
 /*
- * Ingenic IMP RTSPServer subsession equal to H264VideoFileServerMediaSubsession.
+ * Ingenic IMP RTSPServer subsession equal to H265VideoFileServerMediaSubsession.
  *
  * Copyright (C) 2014 Ingenic Semiconductor Co.,Ltd
  * Author: Zoro <yakun.li@ingenic.com>
  */
 
-#include "H264VideoServerMediaSubsession.hh"
-#include "H264VideoRTPSink.hh"
-#include "H264VideoStreamSource.hh"
-#include "H264VideoStreamFramer.hh"
-#include "H264VideoStreamDiscreteFramer.hh"
+#include "H265VideoServerMediaSubsession.hh"
+#include "H265VideoRTPSink.hh"
+#include "H265VideoStreamSource.hh"
+#include "H265VideoStreamFramer.hh"
+#include "H265VideoStreamDiscreteFramer.hh"
 #include "ByteStreamFileSource.hh"
 #include "VideoInput.hh"
-//#include "/home/zjqi/isvp/proj/application/carrier-server-t31-20201226/Options.hh"
+//#include "Options.hh"
 
-int gconf_Main_VideoWidth = 1920;
-int gconf_Main_VideoHeight = 1080;
+extern int gconf_Main_VideoWidth;
+extern int gconf_Main_VideoHeight;
 
-H264VideoServerMediaSubsession*
-H264VideoServerMediaSubsession
+H265VideoServerMediaSubsession*
+H265VideoServerMediaSubsession
 ::createNew(UsageEnvironment& env, VideoInput& videoInput, unsigned estimatedBitrate) {
-	return new H264VideoServerMediaSubsession(env, videoInput, estimatedBitrate);
+	return new H265VideoServerMediaSubsession(env, videoInput, estimatedBitrate);
 }
 
-H264VideoServerMediaSubsession
-::H264VideoServerMediaSubsession(UsageEnvironment& env, VideoInput& videoInput, unsigned estimatedBitrate)
+H265VideoServerMediaSubsession
+::H265VideoServerMediaSubsession(UsageEnvironment& env, VideoInput& videoInput, unsigned estimatedBitrate)
 	: OnDemandServerMediaSubsession(env, True/*reuse the first source*/),
 	  fAuxSDPLine(NULL), fDoneFlag(0), fDummyRTPSink(NULL),
 	  fVideoInput(videoInput) {
 	fEstimatedKbps = (estimatedBitrate + 500)/1000;
 }
 
-H264VideoServerMediaSubsession
-::~H264VideoServerMediaSubsession() {
+H265VideoServerMediaSubsession
+::~H265VideoServerMediaSubsession() {
   delete[] fAuxSDPLine;
 }
 
 static void afterPlayingDummy(void* clientData) {
-  H264VideoServerMediaSubsession* subsess = (H264VideoServerMediaSubsession*)clientData;
+  H265VideoServerMediaSubsession* subsess = (H265VideoServerMediaSubsession*)clientData;
   subsess->afterPlayingDummy1();
 }
 
-void H264VideoServerMediaSubsession::afterPlayingDummy1() {
+void H265VideoServerMediaSubsession::afterPlayingDummy1() {
   // Unschedule any pending 'checking' task:
   envir().taskScheduler().unscheduleDelayedTask(nextTask());
   // Signal the event loop that we're done:
@@ -49,11 +49,11 @@ void H264VideoServerMediaSubsession::afterPlayingDummy1() {
 }
 
 static void checkForAuxSDPLine(void* clientData) {
-  H264VideoServerMediaSubsession* subsess = (H264VideoServerMediaSubsession*)clientData;
+  H265VideoServerMediaSubsession* subsess = (H265VideoServerMediaSubsession*)clientData;
   subsess->checkForAuxSDPLine1();
 }
 
-void H264VideoServerMediaSubsession::checkForAuxSDPLine1() {
+void H265VideoServerMediaSubsession::checkForAuxSDPLine1() {
   char const* dasl;
   if (fAuxSDPLine != NULL) {
     // Signal the event loop that we're done:
@@ -73,11 +73,11 @@ void H264VideoServerMediaSubsession::checkForAuxSDPLine1() {
   }
 }
 
-char const* H264VideoServerMediaSubsession::getAuxSDPLine(RTPSink* rtpSink, FramedSource* inputSource) {
+char const* H265VideoServerMediaSubsession::getAuxSDPLine(RTPSink* rtpSink, FramedSource* inputSource) {
   if (fAuxSDPLine != NULL) return fAuxSDPLine; // it's already been set up (for a previous client)
 
   if (fDummyRTPSink == NULL) { // we're not already setting it up for another, concurrent stream
-    // Note: For H264 video files, the 'config' information ("profile-level-id" and "sprop-parameter-sets") isn't known
+    // Note: For H265 video files, the 'config' information ("profile-level-id" and "sprop-parameter-sets") isn't known
     // until we start reading the file.  This means that "rtpSink"s "auxSDPLine()" will be NULL initially,
     // and we need to start reading data from our file until this changes.
     fDummyRTPSink = rtpSink;
@@ -92,17 +92,17 @@ char const* H264VideoServerMediaSubsession::getAuxSDPLine(RTPSink* rtpSink, Fram
   return fAuxSDPLine;
 }
 
-FramedSource* H264VideoServerMediaSubsession::createNewStreamSource(unsigned /*clientSessionId*/, unsigned& estBitrate) {
+FramedSource* H265VideoServerMediaSubsession::createNewStreamSource(unsigned /*clientSessionId*/, unsigned& estBitrate) {
 	estBitrate = fEstimatedKbps;
 
 	// Create a framer for the Video Elementary Stream:
-	return H264VideoStreamDiscreteFramer::createNew(envir(), fVideoInput.videoSource());
+	return H265VideoStreamDiscreteFramer::createNew(envir(), fVideoInput.videoSource());
 }
 
-RTPSink* H264VideoServerMediaSubsession
+RTPSink* H265VideoServerMediaSubsession
 ::createNewRTPSink(Groupsock* rtpGroupsock,
 		   unsigned char rtpPayloadTypeIfDynamic,
 		   FramedSource* /*inputSource*/) {
 	OutPacketBuffer::maxSize = gconf_Main_VideoWidth * gconf_Main_VideoHeight * 2;
-	return H264VideoRTPSink::createNew(envir(), rtpGroupsock, rtpPayloadTypeIfDynamic);
+	return H265VideoRTPSink::createNew(envir(), rtpGroupsock, rtpPayloadTypeIfDynamic);
 }
