@@ -2163,7 +2163,7 @@ static void *get_video_clarity(void *args)
  * main
  */
 
-int uvc(void)
+int uvc_system_init(void)
 {
 	struct Ucamera_Cfg ucfg;
 	struct Ucamera_Video_CB_Func v_func;
@@ -2318,15 +2318,14 @@ int uvc(void)
 		}
 	}
 #endif
+
+
+
 	while (1) {
-		if (g_Dynamic_Fps)
-			imp_SensorFPS_Adapture();
-		 usleep(1000*1000*2);
-                 zjqi("hello uvc!!!");
+      	//if (g_Dynamic_Fps)
+      		//imp_SensorFPS_Adapture();
+        	 usleep(1000*1000*5);
+               zjqi("hello uvc!!!");
 	}
-#ifdef T20
-	imp_system_exit();
-	Ucamera_DeInit();
-#endif
 	return 0;
 }

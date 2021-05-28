@@ -231,6 +231,7 @@ int sample_ucamera_led_init(int gpio);
 int sample_ucamera_led_ctl(int gpio, int value);
 int speak_volume_write_config(int val);
 
+int uvc_system_init(void);
 
 #ifdef __cplusplus
 #if __cplusplus

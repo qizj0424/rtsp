@@ -24,10 +24,12 @@
 #include <imp/imp_isp.h>
 
 #include "VideoInput.hh"
+#include "imp-common.hh"
 #include "H264VideoStreamSource.hh"
 
 #define TAG 						"sample-RTSPServer"
 
+pthread_t VideoInput::ispTuneTid = -1;
 int gconf_Main_VideoWidth = CONFIG_VIDEO_WIDTH;
 int gconf_Main_VideoHeight = CONFIG_VIDEO_HEIGHT;
 
@@ -259,6 +261,18 @@ static inline int close_stream_file(int fd)
 	return close(fd);
 }
 
+void *VideoInput::ispAutoTuningThread(void *p){
+    int ret;	
+    ret = uvc_system_init();
+	if (ret < 0) {
+		printf("%s: %d\n", __func__, __LINE__);
+		return false;
+	}
+
+	return 0; 
+
+}
+
 VideoInput* VideoInput::createNew(UsageEnvironment& env, int streamNum) {
     if (!fHaveInitialized) {
 		if (!initialize(env)) {
@@ -293,10 +307,11 @@ bool VideoInput::initialize(UsageEnvironment& env) {
 	int ret;
 
 	ret = imp_init();
-	if (ret < 0) {
-		printf("%s: %d\n", __func__, __LINE__);
-		return false;
-	}
+	//ret = pthread_create(&ispTuneTid, NULL, VideoInput::ispAutoTuningThread, NULL);
+		if (ret < 0) {
+			return false;
+		}
+       // while(1){}
 
 	return true;
 }
