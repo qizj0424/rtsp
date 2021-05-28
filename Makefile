@@ -1,42 +1,77 @@
 
-SRC_FILE = H264VideoServerMediaSubsession.o H265VideoServerMediaSubsession.o H264VideoStreamSource.o H265VideoStreamSource.o RTSPServer.o VideoInput.o
-EXT_LIB = -L./live555/prebuilt/lib/uclibc/
 
-SRC_DIR = $(shell ls -R | grep ":")
-INCLUDE_DIR = $(subst .,-I.,$(SRC_DIR))
-INCLUDE = $(subst :,,$(INCLUDE_DIR))
+Target = UVC_NET_camera 
+COPY_PATH = ~/nfs_shared/
 
-LINK_TARGET = Tseries_RTSP_demo
+CROSS_COMPILE ?= mips-linux-gnu-
+COMPILE_TYPE ?= uclibc
+# COMPILE_TYPE ?= glibc
 
-CROSS_COMPILE=mips-linux-uclibc-gnu-
-CC=$(CROSS_COMPILE)gcc
-CXX=$(CROSS_COMPILE)g++
-STRIP=$(CROSS_COMPILE)strip
-LD=$(CROSS_COMPILE)ld
+CC = $(CROSS_COMPILE)gcc
+CXX= $(CROSS_COMPILE)g++
+LD = $(CROSS_COMPILE)ld
+AR = $(CROSS_COMPILE)ar cr
+STRIP = $(CROSS_COMPILE)strip
+HOST := T31
 
-CFLAGS= -Os -Wall -Werror \
-	./sdk/lib/uclibc/libimp.a \
-	./sdk/lib/uclibc/libsysutils.a \
-	./sdk/lib/uclibc/libalog.a \
-	-lliveMedia -lBasicUsageEnvironment \
-	-lUsageEnvironment -lgroupsock -lpthread -lrt
+export HOST COMPILE_TYPE
 
-ODIR=obj
-OBJ  = $(SRC_FILE:.cpp=.o)
-OBJECTS = $(addprefix $(ODIR)/,$(notdir $(OBJ)))
+CFLAGS = -O2 -Wall -march=mips32r2
 
-.PHONY: all
-all: mk_obj $(LINK_TARGET)
+ifeq ($(HOST), T31)
+	SDK_DIR := t31_sdk
+	CFLAGS += -DT31
+endif
 
-mk_obj:
-	mkdir -p $(ODIR)
+ifeq ($(HOST), T21)
+	SDK_DIR := t21_sdk
+	CFLAGS += -DT21
+endif
 
-$(LINK_TARGET): mk_obj $(OBJ)
-	$(CXX) -o $(ODIR)/$@ $(OBJECTS) $(INCLUDE) $(EXT_LIB) $(CFLAGS)
-	$(STRIP) $(ODIR)/$@
+ifeq ($(HOST), T20)
+	SDK_DIR := t20_sdk
+	CFLAGS += -DT20
+endif
 
-%.o:%.cpp
-	$(CXX) $(CFLAGS) $(INCLUDE) -I$(ODIR) -c -o $(ODIR)/$(notdir $@) $<
+ifeq ($(COMPILE_TYPE), uclibc)
+	CFLAGS += -muclibc
+	LDFLAG += -muclibc
+endif
+
+sources_file = $(wildcard *.cpp)
+object_file = $(patsubst %.cpp,%.o,$(sources_file))
+include_file = $(wildcard *.h)
+
+INCLUDES = -I./ \
+		-I./$(SDK_DIR)/include \
+		-I./uvclib/include \
+		-I./live555/prebuilt/include/BasicUsageEnvironment \
+		-I./live555/prebuilt/include/groupsock \
+		-I./live555/prebuilt/include/liveMedia \
+		-I./live555/prebuilt/include/UsageEnvironment
+
+LIBS := -L./$(SDK_DIR)/lib/$(COMPILE_TYPE) -limp -lalog -lsysutils \
+		-L./uvclib/lib/$(COMPILE_TYPE) -lusbcamera \
+		-L./live555/prebuilt/lib/$(COMPILE_TYPE) -lliveMedia -lgroupsock \
+			-lBasicUsageEnvironment -lUsageEnvironment 
+
+LIBS += -lpthread -lm -lrt -ldl
+
+
+
+$(Target) : $(object_file)
+	$(CXX) $^ $(CFLAGS) ${LIBS} -o $@
+
+%.o : %.cpp
+	$(CXX) $(CFLAGS) -c $< -o $@ $(INCLUDES)
+
+.PHONY:clean cleanall cp
 
 clean:
-	rm $(ODIR) -rf
+	-rm -rf *.o
+
+cleanall: clean
+	-rm -rf $(Target)
+
+cp:
+	cp ./$(Target) $(COPY_PATH)

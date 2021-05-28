@@ -23,19 +23,14 @@ using namespace std;
 #define MAX_POINT_NUN			5
 #define MAX_PERM_NUM			8
 
-#define CONFIG_SENSOR_NAME		"jxf23"
+#define CONFIG_SENSOR_NAME		"jxf37"
 #define CONFIG_SENSOR_CUBS_TYPE        TX_SENSOR_CONTROL_INTERFACE_I2C
 #define CONFIG_SENSOR_ADDR		0x40
 #define CONFIG_FPS_NUM			15
 #define CONFIG_FPS_DEN			1
 #define CONFIG_VIDEO_WIDTH		1920
 #define CONFIG_VIDEO_HEIGHT		1080
-#define CHN0_EN                 1
-#define CHN1_EN                 0
-#define CHN2_EN                 0
-#define CHN3_EN                 1
-
-#define BITRATE_720P_Kbs        1000
+#define BITRATE_720P_Kbs                1000
 
 class VideoInput: public Medium {
 public:
