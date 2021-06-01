@@ -368,7 +368,7 @@ int sample_video_backlight_compens_set(int value)
 		Ucamera_LOG("set BackLight Invalid leave:%d\n", value);
 		return -1;
 	}
-	ret = IMP_ISP_Tuning_SetHiLightDepress(value);
+	ret = IMP_ISP_Tuning_SetHiLightDepress(0);
 	if (ret)
 		Ucamera_LOG("ERROR: set BackLight Invalid leave:%d\n", value);
 	backlight_compens.data[UVC_CUR] = value;
@@ -395,9 +395,9 @@ int sample_video_backlight_compens_get(void)
 int sample_video_brightness_set(int value)
 {
 	int ret;
-	unsigned char bright = 0;
+	unsigned char bright = 128;
 
-	bright = value & 0xff;
+	//bright = value & 0xff;
 	ret = IMP_ISP_Tuning_SetBrightness(bright);
 	if (ret)
 		Ucamera_LOG("ERROR: set BrightNess failed :%d\n", ret);
@@ -425,9 +425,9 @@ int sample_video_brightness_get(void)
 int sample_video_contrast_set(int value)
 {
 	int ret;
-	unsigned char tmp = 0;
+	unsigned char tmp = 128;
 
-	tmp = value & 0xff;
+//	tmp = value & 0xff;
 	ret = IMP_ISP_Tuning_SetContrast(tmp);
 	if (ret)
 		Ucamera_LOG("set Contrast failed:%d\n", ret);
@@ -456,8 +456,8 @@ int sample_video_contrast_get(void)
 int sample_video_saturation_set(int value)
 {
 	int ret;
-	unsigned char tmp = 0;
-	tmp = value & 0xff;
+	unsigned char tmp = 128;
+	//tmp = value & 0xff;
 
 	ret = IMP_ISP_Tuning_SetSaturation(tmp);
 	if (ret)
@@ -487,9 +487,9 @@ int sample_video_saturation_get(void)
 int sample_video_sharpness_set(int value)
 {
 	int ret;
-	unsigned char tmp = 0;
+	unsigned char tmp = 128;
 
-	tmp = value & 0xff;
+//	tmp = value & 0xff;
 	ret = IMP_ISP_Tuning_SetSharpness(tmp);
 	if (ret)
 		Ucamera_LOG("set Sharpness failed:%d\n", ret);
@@ -581,7 +581,7 @@ int sample_video_gamma_set(int value)
 
 	memcpy(&gamma, &gamma_cur, sizeof(IMPISPGamma));
 	gamma.gamma[64] = gamma_cur.gamma[64] + 3*(value - 400);
-	IMP_ISP_Tuning_SetGamma(&gamma);
+	//IMP_ISP_Tuning_SetGamma(&gamma);
 
 	gamma_pu.data[UVC_CUR] = value;
 	ucamera_uvc_pu_attr_save(UVC_GAMMA_CONTROL, value);
@@ -835,11 +835,11 @@ int imp_isp_tuning_init(void)
 		return -1;
 	}
 
-	IMP_ISP_Tuning_SetContrast(contrast.data[UVC_CUR]);
-	IMP_ISP_Tuning_SetSharpness(sharpness.data[UVC_CUR]);
-	IMP_ISP_Tuning_SetSaturation(saturation.data[UVC_CUR]);
-	IMP_ISP_Tuning_SetBrightness(brightness.data[UVC_CUR]);
-	IMP_ISP_Tuning_SetHiLightDepress(backlight_compens.data[UVC_CUR]);
+	IMP_ISP_Tuning_SetContrast(128);
+	IMP_ISP_Tuning_SetSharpness(128);
+	IMP_ISP_Tuning_SetSaturation(128);
+	IMP_ISP_Tuning_SetBrightness(128);
+	IMP_ISP_Tuning_SetHiLightDepress(0);
 #ifdef T31
 	/*IMP_ISP_Tuning_SetFrontCrop(&fcrop_obj);*/
     	IMP_ISP_Tuning_SetBcshHue(hue.data[UVC_CUR]);
@@ -1563,7 +1563,6 @@ int ucamera_load_config(struct Ucamera_Cfg *ucfg )
 			struct Ucamera_JPEG_Param *jpegl;
 			struct Ucamera_H264_Param *h264l;
 			nframes = strToInt(value);
-                        zjqi("%d",nframes);
 			vcfg->yuyvnum = nframes;
 			vcfg->jpegnum = nframes;
 			vcfg->h264num = nframes;
@@ -1656,6 +1655,7 @@ int speak_volume_write_config(int val)
 static int uvc_event_process(int event_id, void *data)
 {
 	unsigned int intervals = 0;
+               zjqi("--------------->21<-------------");
 
 	switch (event_id) {
 	case UCAMERA_EVENT_STREAMON: {
@@ -1679,14 +1679,15 @@ imp_init_check:
 		}
 #endif
 
-			return imp_sdk_init(frame->fcc, frame->width, frame->height);
+			//return imp_sdk_init(frame->fcc, frame->width, frame->height);
+			return 0;
 	}
 	case UCAMERA_EVENT_STREAMOFF: {
 		struct Ucamera_Video_Frame *frame = (struct Ucamera_Video_Frame *) data;
 		Ucam_Stream_On = 0;
 		if (g_led)
 			sample_ucamera_led_ctl(g_led, 1);
-		IMP_ISP_Tuning_SetGamma(&gamma_cur);
+		//IMP_ISP_Tuning_SetGamma(&gamma_cur);
 
 		return imp_sdk_deinit(frame->fcc);
 	}
@@ -1752,7 +1753,8 @@ void signal_handler(int signum) {
 void *ucam_impsdk_init_entry(void *res)
 {
 	int i;
-	sem_wait(&ucam_ready_sem);
+	//sem_wait(&ucam_ready_sem);
+               zjqi("--------------->12<-------------");
 
 	sample_system_init();
 
@@ -1768,7 +1770,9 @@ void *ucam_impsdk_init_entry(void *res)
 
 	if (g_Speak)
 		sample_audio_play_start();
-	return NULL;
+	
+    imp_sdk_init(V4L2_PIX_FMT_MJPEG,1920,1080);
+    return NULL;
 }
 #endif
 
@@ -2173,6 +2177,8 @@ int uvc_system_init(void)
 	memset(&ucfg, 0, sizeof(struct Ucamera_Cfg));
 	memset(&v_func, 0, sizeof(struct Ucamera_Video_CB_Func));
 	memset(&a_func, 0, sizeof(struct Ucamera_Audio_CB_Func));
+
+               zjqi("--------------->1<-------------");
 #if 0
 	if (AntiCopy_Verify()) {
 		Ucamera_LOG("AntiCopy Verified failed!!!\n");
