@@ -37,14 +37,14 @@
 
 int g_Audio = 0;
 int g_Audio_Ns = -1;
-int g_Fps_Num = SENSOR_FRAME_RATE_NUM_25;
+int g_Fps_Num = SENSOR_FRAME_RATE_NUM;
 int g_VideoWidth = 1920;
 int g_VideoHeight = 1080;
 int g_i2c_addr = 0x40;
 int g_wdr = 0;
 int g_RcMode = IMP_ENC_RC_MODE_CBR;
 int g_BitRate = 1000;
-int g_gop = SENSOR_FRAME_RATE_NUM_25;
+int g_gop = SENSOR_FRAME_RATE_NUM;
 int g_adb = 0;
 int g_rndis = 0;
 int g_Speak = 0;
@@ -58,6 +58,11 @@ int g_Dynamic_Fps = 0;
 int g_Power_save = 1;
 char g_Sensor_Name[16] = "jxf37";
 
+int gconf_Main_VideoWidth = SENSOR_WIDTH;
+int gconf_Main_VideoHeight = SENSOR_HEIGHT;
+
+IMPEncoderProfile gconf_mainPayLoad =  IMP_ENC_PROFILE_HEVC_MAIN;
+IMPEncoderRcMode gconf_defRC = IMP_ENC_RC_MODE_CAPPED_QUALITY;
 
 /*#define SHOW_FRM_BITRATE*/
 #ifdef SHOW_FRM_BITRATE
@@ -89,7 +94,7 @@ struct chn_conf chn[FS_CHN_NUM] = {
 			    .outheight = SENSOR_HEIGHT_THIRD,
                         },
 			
-                        .outFrmRateNum = SENSOR_FRAME_RATE_NUM_25,
+                        .outFrmRateNum = SENSOR_FRAME_RATE_NUM,
 			.outFrmRateDen = SENSOR_FRAME_RATE_DEN,
 			.nrVBs = 2,
 			.type = FS_PHY_CHANNEL,
@@ -378,7 +383,7 @@ int sample_jpeg_init()
 
 	return 0;
 }
-#ifdef T31
+
 static int encoder_param_defalt(IMPEncoderChnAttr *chnAttr, IMPEncoderProfile profile, IMPEncoderRcMode rcMode,
         int w, int h, int outFrmRateNum, int outFrmRateDen, int outBitRate)
 {
@@ -413,6 +418,72 @@ static int encoder_param_defalt(IMPEncoderChnAttr *chnAttr, IMPEncoderProfile pr
     return 0;
 }
 
+int encoder_init_demo(void)
+{
+	int ret = 0;
+        int  grpNum = 0;
+	IMPEncoderChnAttr chnAttr;
+
+	encoder_param_defalt(&chnAttr, gconf_mainPayLoad, gconf_defRC,gconf_Main_VideoWidth,gconf_Main_VideoHeight,SENSOR_FRAME_RATE_NUM,SENSOR_FRAME_RATE_DEN,BITRATE_720P_Kbs);
+
+		/* Creat Encoder Group */
+			ret = IMP_Encoder_CreateGroup(grpNum);
+			if (ret < 0) {
+				IMP_LOG_ERR(TAG, "IMP_Encoder_CreateGroup(%d) error: %d\n", grpNum, ret);
+				return -1;
+			}
+
+		/* Create Channel */
+		ret = IMP_Encoder_CreateChn(0, &chnAttr);
+		if (ret < 0) {
+			IMP_LOG_ERR(TAG, "IMP_Encoder_CreateChn(0) error: %d\n", ret);
+			return -1;
+		}
+
+		/* Resigter Channel */
+	        ret = IMP_Encoder_RegisterChn(grpNum, 0);
+		if (ret < 0) {
+			IMP_LOG_ERR(TAG, "IMP_Encoder_RegisterChn(%d, 0) error: %d\n", grpNum, 0, ret);
+			return -1;
+		}
+
+	return 0;
+}
+
+#if 0
+static int encoder_param_defalt(IMPEncoderChnAttr *chnAttr, IMPEncoderProfile profile, IMPEncoderRcMode rcMode,
+        int w, int h, int outFrmRateNum, int outFrmRateDen, int outBitRate)
+{
+    int ret = 0;
+    IMPEncoderEncType encType = (IMPEncoderEncType)(profile >> 24);
+
+    if ((encType < IMP_ENC_TYPE_AVC) || (encType > IMP_ENC_TYPE_JPEG)) {
+        IMP_LOG_ERR(TAG, "unsupported encode type:%d, we only support avc, hevc and jpeg type\n", encType);
+        return -1;
+    }
+
+    if (encType == IMP_ENC_TYPE_JPEG) {
+        rcMode = IMP_ENC_RC_MODE_FIXQP;
+    }
+
+    if ((rcMode < IMP_ENC_RC_MODE_FIXQP) || (rcMode > IMP_ENC_RC_MODE_CAPPED_QUALITY)) {
+        IMP_LOG_ERR(TAG, "unsupported rcmode:%d, we only support fixqp, cbr, vbr, capped vbr and capped quality\n", rcMode);
+        return -1;
+    }
+
+    memset(chnAttr, 0, sizeof(IMPEncoderChnAttr));
+
+    ret = IMP_Encoder_SetDefaultParam(chnAttr, profile, rcMode, w, h, outFrmRateNum, outFrmRateDen, outFrmRateNum * 2 / outFrmRateDen,
+            ((rcMode == IMP_ENC_RC_MODE_CAPPED_VBR) || (rcMode == IMP_ENC_RC_MODE_CAPPED_QUALITY)) ? 3 : 1,
+            (rcMode == IMP_ENC_RC_MODE_FIXQP) ? 35 : -1, outBitRate);
+    if (ret < 0) {
+        IMP_LOG_ERR(TAG, "IMP_Encoder_SetDefaultParam failed\n");
+        return -1;
+    }
+
+
+    return 0;
+}
 IMPEncoderRcMode gconf_defRC_uvc = IMP_ENC_RC_MODE_CAPPED_QUALITY;
 int sample_encoder_init()
 {
@@ -456,275 +527,6 @@ int sample_encoder_init()
 }
 #endif
 
-#ifdef T21
-int sample_encoder_init()
-{
-	int i, ret, chnNum = 0;
-	IMPEncoderAttr *enc_attr;
-	IMPEncoderRcAttr *rc_attr;
-	IMPFSChnAttr *imp_chn_attr_tmp;
-	IMPEncoderCHNAttr channel_attr;
-
-	int S_RC_METHOD = g_RcMode;
-	chn[0].payloadType = PT_H264;
-
-	for (i = 0; i <  FS_CHN_NUM; i++) {
-		if (chn[i].enable) {
-			imp_chn_attr_tmp = &chn[i].fs_chn_attr;
-			memset(&channel_attr, 0, sizeof(IMPEncoderCHNAttr));
-			enc_attr = &channel_attr.encAttr;
-			enc_attr->enType = chn[i].payloadType;
-			if ((imp_chn_attr_tmp->picHeight > 1920) || (imp_chn_attr_tmp->picHeight == 1920)) {
-				enc_attr->bufSize = imp_chn_attr_tmp->picWidth*imp_chn_attr_tmp->picHeight*3/10;
-			} else if ((imp_chn_attr_tmp->picHeight > 1520) || (imp_chn_attr_tmp->picHeight == 1520)) {
-				enc_attr->bufSize = imp_chn_attr_tmp->picWidth*imp_chn_attr_tmp->picHeight*3/8;
-			} else if ((imp_chn_attr_tmp->picHeight > 1080) || (imp_chn_attr_tmp->picHeight == 1080)) {
-				enc_attr->bufSize = imp_chn_attr_tmp->picWidth*imp_chn_attr_tmp->picHeight/2;
-			} else {
-				enc_attr->bufSize = imp_chn_attr_tmp->picWidth*imp_chn_attr_tmp->picHeight*3/4;
-			}
-			enc_attr->profile = 1;
-			enc_attr->picWidth = imp_chn_attr_tmp->picWidth;
-			enc_attr->picHeight = imp_chn_attr_tmp->picHeight;
-            if (chn[i].payloadType == PT_JPEG) {
-                chnNum = 3 + chn[i].index;
-            } else if (chn[i].payloadType == PT_H264) {
-                chnNum = chn[i].index;
-				enc_attr->profile = -1;
-                rc_attr = &channel_attr.rcAttr;
-                rc_attr->outFrmRate.frmRateNum = imp_chn_attr_tmp->outFrmRateNum;
-                rc_attr->outFrmRate.frmRateDen = imp_chn_attr_tmp->outFrmRateDen;
-                rc_attr->maxGop = 2 * rc_attr->outFrmRate.frmRateNum / rc_attr->outFrmRate.frmRateDen;
-                if (S_RC_METHOD == ENC_RC_MODE_CBR) {
-                    rc_attr->attrRcMode.rcMode = ENC_RC_MODE_CBR;
-		    unsigned int BitRate = (imp_chn_attr_tmp->picWidth * imp_chn_attr_tmp->picHeight) / (1280 * 768);
-                    rc_attr->attrRcMode.attrH264Cbr.outBitRate = BitRate * g_BitRate;
-                    rc_attr->attrRcMode.attrH264Cbr.maxQp = 45;
-                    rc_attr->attrRcMode.attrH264Cbr.minQp = 15;
-                    rc_attr->attrRcMode.attrH264Cbr.iBiasLvl = 0;
-                    rc_attr->attrRcMode.attrH264Cbr.frmQPStep = 3;
-                    rc_attr->attrRcMode.attrH264Cbr.gopQPStep = 15;
-                    rc_attr->attrRcMode.attrH264Cbr.adaptiveMode = false;
-                    rc_attr->attrRcMode.attrH264Cbr.gopRelation = false;
-
-                    rc_attr->attrHSkip.hSkipAttr.skipType = IMP_Encoder_STYPE_N1X;
-                    rc_attr->attrHSkip.hSkipAttr.m = 0;
-                    rc_attr->attrHSkip.hSkipAttr.n = 0;
-                    rc_attr->attrHSkip.hSkipAttr.maxSameSceneCnt = 0;
-                    rc_attr->attrHSkip.hSkipAttr.bEnableScenecut = 0;
-                    rc_attr->attrHSkip.hSkipAttr.bBlackEnhance = 0;
-                    rc_attr->attrHSkip.maxHSkipType = IMP_Encoder_STYPE_N1X;
-                } else if (S_RC_METHOD == ENC_RC_MODE_VBR) {
-		    unsigned int BitRate = (imp_chn_attr_tmp->picWidth * imp_chn_attr_tmp->picHeight) / (1280 * 768);
-
-                    rc_attr->attrRcMode.rcMode = ENC_RC_MODE_VBR;
-                    rc_attr->attrRcMode.attrH264Vbr.maxQp = 45;
-                    rc_attr->attrRcMode.attrH264Vbr.minQp = 15;
-                    rc_attr->attrRcMode.attrH264Vbr.staticTime = 2;
-                    rc_attr->attrRcMode.attrH264Cbr.outBitRate = BitRate * g_BitRate;
-                    rc_attr->attrRcMode.attrH264Vbr.iBiasLvl = 0;
-                    rc_attr->attrRcMode.attrH264Vbr.changePos = 80;
-                    rc_attr->attrRcMode.attrH264Vbr.qualityLvl = 2;
-                    rc_attr->attrRcMode.attrH264Vbr.frmQPStep = 3;
-                    rc_attr->attrRcMode.attrH264Vbr.gopQPStep = 15;
-                    rc_attr->attrRcMode.attrH264Vbr.gopRelation = false;
-
-                    rc_attr->attrHSkip.hSkipAttr.skipType = IMP_Encoder_STYPE_N1X;
-                    rc_attr->attrHSkip.hSkipAttr.m = 0;
-                    rc_attr->attrHSkip.hSkipAttr.n = 0;
-                    rc_attr->attrHSkip.hSkipAttr.maxSameSceneCnt = 0;
-                    rc_attr->attrHSkip.hSkipAttr.bEnableScenecut = 0;
-                    rc_attr->attrHSkip.hSkipAttr.bBlackEnhance = 0;
-                    rc_attr->attrHSkip.maxHSkipType = IMP_Encoder_STYPE_N1X;
-                } else if (S_RC_METHOD == ENC_RC_MODE_SMART) {
-                    rc_attr->attrRcMode.rcMode = ENC_RC_MODE_SMART;
-                    rc_attr->attrRcMode.attrH264Smart.maxQp = 45;
-                    rc_attr->attrRcMode.attrH264Smart.minQp = 15;
-                    rc_attr->attrRcMode.attrH264Smart.staticTime = 2;
-                    rc_attr->attrRcMode.attrH264Smart.maxBitRate = BITRATE_720P_Kbs * (imp_chn_attr_tmp->picWidth * imp_chn_attr_tmp->picHeight) / (1280 * 720);
-                    rc_attr->attrRcMode.attrH264Smart.iBiasLvl = 0;
-                    rc_attr->attrRcMode.attrH264Smart.changePos = 80;
-                    rc_attr->attrRcMode.attrH264Smart.qualityLvl = 2;
-                    rc_attr->attrRcMode.attrH264Smart.frmQPStep = 3;
-                    rc_attr->attrRcMode.attrH264Smart.gopQPStep = 15;
-                    rc_attr->attrRcMode.attrH264Smart.gopRelation = false;
-
-                    rc_attr->attrHSkip.hSkipAttr.skipType = IMP_Encoder_STYPE_N1X;
-                    rc_attr->attrHSkip.hSkipAttr.m = rc_attr->maxGop - 1;
-                    rc_attr->attrHSkip.hSkipAttr.n = 1;
-                    rc_attr->attrHSkip.hSkipAttr.maxSameSceneCnt = 6;
-                    rc_attr->attrHSkip.hSkipAttr.bEnableScenecut = 0;
-                    rc_attr->attrHSkip.hSkipAttr.bBlackEnhance = 0;
-                    rc_attr->attrHSkip.maxHSkipType = IMP_Encoder_STYPE_N1X;
-                } else { /* fixQp */
-                    rc_attr->attrRcMode.rcMode = ENC_RC_MODE_FIXQP;
-                    rc_attr->attrRcMode.attrH264FixQp.qp = g_gop;
-
-                    rc_attr->attrHSkip.hSkipAttr.skipType = IMP_Encoder_STYPE_N1X;
-                    rc_attr->attrHSkip.hSkipAttr.m = 0;
-                    rc_attr->attrHSkip.hSkipAttr.n = 0;
-                    rc_attr->attrHSkip.hSkipAttr.maxSameSceneCnt = 0;
-                    rc_attr->attrHSkip.hSkipAttr.bEnableScenecut = 0;
-                    rc_attr->attrHSkip.hSkipAttr.bBlackEnhance = 0;
-                    rc_attr->attrHSkip.maxHSkipType = IMP_Encoder_STYPE_N1X;
-                }
-            } else { //PT_H265
-                chnNum = chn[i].index;
-                rc_attr = &channel_attr.rcAttr;
-                rc_attr->outFrmRate.frmRateNum = imp_chn_attr_tmp->outFrmRateNum;
-                rc_attr->outFrmRate.frmRateDen = imp_chn_attr_tmp->outFrmRateDen;
-                rc_attr->maxGop = 2 * rc_attr->outFrmRate.frmRateNum / rc_attr->outFrmRate.frmRateDen;
-                if (S_RC_METHOD == ENC_RC_MODE_CBR) {
-                    rc_attr->attrRcMode.attrH265Cbr.maxQp = 45;
-                    rc_attr->attrRcMode.attrH265Cbr.minQp = 15;
-                    rc_attr->attrRcMode.attrH265Cbr.staticTime = 2;
-                    rc_attr->attrRcMode.attrH265Cbr.outBitRate = BITRATE_720P_Kbs * (imp_chn_attr_tmp->picWidth * imp_chn_attr_tmp->picHeight) / (1280 * 720);
-                    rc_attr->attrRcMode.attrH265Cbr.iBiasLvl = 0;
-                    rc_attr->attrRcMode.attrH265Cbr.frmQPStep = 3;
-                    rc_attr->attrRcMode.attrH265Cbr.gopQPStep = 15;
-                    rc_attr->attrRcMode.attrH265Cbr.flucLvl = 2;
-
-                    rc_attr->attrHSkip.hSkipAttr.skipType = IMP_Encoder_STYPE_N1X;
-                    rc_attr->attrHSkip.hSkipAttr.m = 0;
-                    rc_attr->attrHSkip.hSkipAttr.n = 0;
-                    rc_attr->attrHSkip.hSkipAttr.maxSameSceneCnt = 0;
-                    rc_attr->attrHSkip.hSkipAttr.bEnableScenecut = 0;
-                    rc_attr->attrHSkip.hSkipAttr.bBlackEnhance = 0;
-                    rc_attr->attrHSkip.maxHSkipType = IMP_Encoder_STYPE_N1X;
-                } else if (S_RC_METHOD == ENC_RC_MODE_VBR) {
-                    rc_attr->attrRcMode.rcMode = ENC_RC_MODE_VBR;
-                    rc_attr->attrRcMode.attrH265Vbr.maxQp = 45;
-                    rc_attr->attrRcMode.attrH265Vbr.minQp = 15;
-                    rc_attr->attrRcMode.attrH265Vbr.staticTime = 2;
-                    rc_attr->attrRcMode.attrH265Vbr.maxBitRate = BITRATE_720P_Kbs * (imp_chn_attr_tmp->picWidth * imp_chn_attr_tmp->picHeight) / (1280 * 720);
-                    rc_attr->attrRcMode.attrH265Vbr.iBiasLvl = 0;
-                    rc_attr->attrRcMode.attrH265Vbr.changePos = 80;
-                    rc_attr->attrRcMode.attrH265Vbr.qualityLvl = 2;
-                    rc_attr->attrRcMode.attrH265Vbr.frmQPStep = 3;
-                    rc_attr->attrRcMode.attrH265Vbr.gopQPStep = 15;
-                    rc_attr->attrRcMode.attrH265Vbr.flucLvl = 2;
-
-                    rc_attr->attrHSkip.hSkipAttr.skipType = IMP_Encoder_STYPE_N1X;
-                    rc_attr->attrHSkip.hSkipAttr.m = 0;
-                    rc_attr->attrHSkip.hSkipAttr.n = 0;
-                    rc_attr->attrHSkip.hSkipAttr.maxSameSceneCnt = 0;
-                    rc_attr->attrHSkip.hSkipAttr.bEnableScenecut = 0;
-                    rc_attr->attrHSkip.hSkipAttr.bBlackEnhance = 0;
-                    rc_attr->attrHSkip.maxHSkipType = IMP_Encoder_STYPE_N1X;
-                } else if (S_RC_METHOD == ENC_RC_MODE_SMART) {
-                    rc_attr->attrRcMode.rcMode = ENC_RC_MODE_SMART;
-                    rc_attr->attrRcMode.attrH265Smart.maxQp = 45;
-                    rc_attr->attrRcMode.attrH265Smart.minQp = 15;
-                    rc_attr->attrRcMode.attrH265Smart.staticTime = 2;
-                    rc_attr->attrRcMode.attrH265Smart.maxBitRate = BITRATE_720P_Kbs * (imp_chn_attr_tmp->picWidth * imp_chn_attr_tmp->picHeight) / (1280 * 720);
-                    rc_attr->attrRcMode.attrH265Smart.iBiasLvl = 0;
-                    rc_attr->attrRcMode.attrH265Smart.changePos = 80;
-                    rc_attr->attrRcMode.attrH265Smart.qualityLvl = 2;
-                    rc_attr->attrRcMode.attrH265Smart.frmQPStep = 3;
-                    rc_attr->attrRcMode.attrH265Smart.gopQPStep = 15;
-                    rc_attr->attrRcMode.attrH265Smart.flucLvl = 2;
-
-                    rc_attr->attrHSkip.hSkipAttr.skipType = IMP_Encoder_STYPE_N1X;
-                    rc_attr->attrHSkip.hSkipAttr.m = rc_attr->maxGop - 1;
-                    rc_attr->attrHSkip.hSkipAttr.n = 1;
-                    rc_attr->attrHSkip.hSkipAttr.maxSameSceneCnt = 6;
-                    rc_attr->attrHSkip.hSkipAttr.bEnableScenecut = 0;
-                    rc_attr->attrHSkip.hSkipAttr.bBlackEnhance = 0;
-                    rc_attr->attrHSkip.maxHSkipType = IMP_Encoder_STYPE_N1X;
-                } else { /* fixQp */
-                    rc_attr->attrRcMode.rcMode = ENC_RC_MODE_FIXQP;
-                    rc_attr->attrRcMode.attrH265FixQp.qp = 35;
-
-                    rc_attr->attrHSkip.hSkipAttr.skipType = IMP_Encoder_STYPE_N1X;
-                    rc_attr->attrHSkip.hSkipAttr.m = 0;
-                    rc_attr->attrHSkip.hSkipAttr.n = 0;
-                    rc_attr->attrHSkip.hSkipAttr.maxSameSceneCnt = 0;
-                    rc_attr->attrHSkip.hSkipAttr.bEnableScenecut = 0;
-                    rc_attr->attrHSkip.hSkipAttr.bBlackEnhance = 0;
-                    rc_attr->attrHSkip.maxHSkipType = IMP_Encoder_STYPE_N1X;
-                }
-            }
-
-			ret = IMP_Encoder_CreateChn(chnNum, &channel_attr);
-			if (ret < 0) {
-				IMP_LOG_ERR(TAG, "IMP_Encoder_CreateChn(%d) error !\n", chnNum);
-				return -1;
-			}
-
-			ret = IMP_Encoder_RegisterChn(chn[i].index, chnNum);
-			if (ret < 0) {
-				IMP_LOG_ERR(TAG, "IMP_Encoder_RegisterChn(%d, %d) error: %d\n", chn[i].index, chnNum, ret);
-				return -1;
-			}
-		}
-	}
-
-	return 0;
-}
-#endif
-
-#ifdef T20
-int sample_encoder_init()
-{
-	int i, ret, chnNum = 0;
-	IMPEncoderAttr *enc_attr;
-	IMPEncoderRcAttr *rc_attr;
-	IMPFSChnAttr *imp_chn_attr_tmp;
-	IMPEncoderCHNAttr channel_attr;
-
-	for (i = 0; i <  FS_CHN_NUM; i++) {
-	if (chn[i].enable) {
-		imp_chn_attr_tmp = &chn[i].fs_chn_attr;
-		chnNum = chn[i].index;
-
-		memset(&channel_attr, 0, sizeof(IMPEncoderCHNAttr));
-		enc_attr = &channel_attr.encAttr;
-		enc_attr->enType = PT_H264;
-		enc_attr->bufSize = 0;
-		enc_attr->profile = 1;
-		enc_attr->picWidth = imp_chn_attr_tmp->picWidth;
-		enc_attr->picHeight = imp_chn_attr_tmp->picHeight;
-		rc_attr = &channel_attr.rcAttr;
-		rc_attr->outFrmRate.frmRateNum = imp_chn_attr_tmp->outFrmRateNum;
-		rc_attr->outFrmRate.frmRateDen = imp_chn_attr_tmp->outFrmRateDen;
-		rc_attr->maxGop = 2 * rc_attr->outFrmRate.frmRateNum / rc_attr->outFrmRate.frmRateDen;
-
-
-		rc_attr->attrRcMode.rcMode = ENC_RC_MODE_CBR;
-		rc_attr->attrRcMode.attrH264Cbr.outBitRate = (double)1.0 * g_BitRate * (imp_chn_attr_tmp->picWidth * imp_chn_attr_tmp->picHeight) / (1280 * 720);
-		rc_attr->attrRcMode.attrH264Cbr.maxQp = 45;
-		rc_attr->attrRcMode.attrH264Cbr.minQp = 15;
-		rc_attr->attrRcMode.attrH264Cbr.iBiasLvl = 0;
-		rc_attr->attrRcMode.attrH264Cbr.frmQPStep = 3;
-		rc_attr->attrRcMode.attrH264Cbr.gopQPStep = 15;
-		rc_attr->attrRcMode.attrH264Cbr.adaptiveMode = false;
-		rc_attr->attrRcMode.attrH264Cbr.gopRelation = false;
-
-		rc_attr->attrHSkip.hSkipAttr.skipType = IMP_Encoder_STYPE_N1X;
-		rc_attr->attrHSkip.hSkipAttr.m = 0;
-		rc_attr->attrHSkip.hSkipAttr.n = 0;
-		rc_attr->attrHSkip.hSkipAttr.maxSameSceneCnt = 0;
-		rc_attr->attrHSkip.hSkipAttr.bEnableScenecut = 0;
-		rc_attr->attrHSkip.hSkipAttr.bBlackEnhance = 0;
-		rc_attr->attrHSkip.maxHSkipType = IMP_Encoder_STYPE_N1X;
-
-		ret = IMP_Encoder_CreateChn(chnNum, &channel_attr);
-		if (ret < 0) {
-			IMP_LOG_ERR(TAG, "IMP_Encoder_CreateChn(%d) error !\n", chnNum);
-			return -1;
-		}
-
-		ret = IMP_Encoder_RegisterChn(chn[i].index, chnNum);
-		if (ret < 0) {
-			IMP_LOG_ERR(TAG, "IMP_Encoder_RegisterChn(%d, %d) error: %d\n", chn[i].index, chnNum, ret);
-			return -1;
-		}
-	}
-	}
-
-	return 0;
-}
-#endif
 
 int sample_jpeg_exit(void)
 {

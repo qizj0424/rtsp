@@ -44,25 +44,20 @@ extern int g_Dynamic_Fps;
 extern int g_Power_save;
 extern char g_Sensor_Name[16];
 
-#define SENSOR_FRAME_RATE_NUM_25	25
+#define SENSOR_FRAME_RATE_NUM	25
 #define SENSOR_FRAME_RATE_NUM_30	30
 #define SENSOR_FRAME_RATE_DEN		1
 
-//#define SENSOR_OS05A10
-//#define SENSOR_IMX335
-//#define SENSOR_GC2053
-//#define SENSOR_GC4C33
-//#define SENSOR_IMX327
-//#define SENSOR_IMX307
+#define SENSOR_JXF37
 #define CHN0_EN                 1
 #define CROP_EN					1
 
-#if defined SENSOR_OS05A10
-#define SENSOR_NAME				"os05a10"
+#if defined SENSOR_JXF37
+#define SENSOR_NAME				"jxf37"
 #define SENSOR_CUBS_TYPE        TX_SENSOR_CONTROL_INTERFACE_I2C
-#define SENSOR_I2C_ADDR			0x36
-#define SENSOR_WIDTH			2592
-#define SENSOR_HEIGHT			1944
+#define SENSOR_I2C_ADDR			0x40
+#define SENSOR_WIDTH			1920
+#define SENSOR_HEIGHT			1080
 #define CHN0_EN                 1
 #define CHN1_EN                 0
 #define CHN2_EN                 0
@@ -131,7 +126,7 @@ extern char g_Sensor_Name[16];
 #define SENSOR_WIDTH_THIRD		1280
 #define SENSOR_HEIGHT_THIRD		720
 
-#define BITRATE_720P_Kbs        (1000 * 5)
+#define BITRATE_720P_Kbs        1000
 
 #define NR_FRAMES_TO_SAVE		200
 #define STREAM_BUFFER_SIZE		(1 * 1024 * 1024)
@@ -177,6 +172,7 @@ struct chn_conf{
 
 #define UVC_BUF_NUM 	2
 #define UVC_BUF_SIZE	1.5*1024*1024
+
 
 int sample_system_init();
 int sample_system_exit();
@@ -231,6 +227,7 @@ int sample_ucamera_led_init(int gpio);
 int sample_ucamera_led_ctl(int gpio, int value);
 int speak_volume_write_config(int val);
 
+int encoder_init_demo(void);
 int uvc_system_init(void);
 
 #ifdef __cplusplus

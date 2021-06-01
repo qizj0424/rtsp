@@ -68,10 +68,8 @@ $(Target) : $(object_file)
 .PHONY:clean cleanall cp
 
 clean:
-	-rm -rf *.o
-
-cleanall: clean
 	-rm -rf $(Target)
+	-rm -rf *.o
 
 cp:
 	cp ./$(Target) $(COPY_PATH)

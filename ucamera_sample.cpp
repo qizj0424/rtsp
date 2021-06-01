@@ -634,7 +634,7 @@ int sample_video_powerlinefreq_set(int value)
 	if (ret)
 		Ucamera_LOG("set PowerLine Freq failed:%d\n", ret);
 	if (attr == IMPISP_ANTIFLICKER_50HZ)
-		fps_num = SENSOR_FRAME_RATE_NUM_25;
+		fps_num = SENSOR_FRAME_RATE_NUM;
 	else if(attr == IMPISP_ANTIFLICKER_60HZ)
 		fps_num = SENSOR_FRAME_RATE_NUM_30;
 	else
@@ -858,7 +858,7 @@ int imp_isp_tuning_init(void)
 	IMP_ISP_Tuning_SetAntiFlickerAttr(attr);
 
 	if (attr == IMPISP_ANTIFLICKER_50HZ)
-		fps_num = SENSOR_FRAME_RATE_NUM_25;
+		fps_num = SENSOR_FRAME_RATE_NUM;
 	else if(attr == IMPISP_ANTIFLICKER_60HZ)
 		fps_num = SENSOR_FRAME_RATE_NUM_30;
 	else
@@ -1174,7 +1174,7 @@ int imp_sdk_init(int format, int width, int height)
 		ret = sample_jpeg_init();
 	//	break;
 	//case V4L2_PIX_FMT_H264:
-		ret = encoder_init();
+		ret = encoder_init_demo();
 		break;
 	}
 	if (ret < 0) {

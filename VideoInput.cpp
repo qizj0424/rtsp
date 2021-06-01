@@ -28,13 +28,10 @@
 #include "H264VideoStreamSource.hh"
 
 #define TAG 						"sample-RTSPServer"
+extern int gconf_Main_VideoWidth;
+extern int gconf_Main_VideoHeight;
 
 pthread_t VideoInput::ispTuneTid = -1;
-int gconf_Main_VideoWidth = CONFIG_VIDEO_WIDTH;
-int gconf_Main_VideoHeight = CONFIG_VIDEO_HEIGHT;
-
-IMPEncoderProfile gconf_mainPayLoad =  IMP_ENC_PROFILE_AVC_MAIN;//IMP_ENC_PROFILE_HEVC_MAIN;
-IMPEncoderRcMode gconf_defRC = IMP_ENC_RC_MODE_CAPPED_QUALITY;
 
 Boolean VideoInput::fpsIsOn[MAX_STREAM_CNT] = {False, False};
 Boolean VideoInput::fHaveInitialized = False;
@@ -75,71 +72,6 @@ static int framesource_init(IMPFSChnAttr *imp_chn_attr)
 	return 0;
 }
 
-static int encoder_param_defalt(IMPEncoderChnAttr *chnAttr, IMPEncoderProfile profile, IMPEncoderRcMode rcMode,
-        int w, int h, int outFrmRateNum, int outFrmRateDen, int outBitRate)
-{
-    int ret = 0;
-    IMPEncoderEncType encType = (IMPEncoderEncType)(profile >> 24);
-
-    if ((encType < IMP_ENC_TYPE_AVC) || (encType > IMP_ENC_TYPE_JPEG)) {
-        IMP_LOG_ERR(TAG, "unsupported encode type:%d, we only support avc, hevc and jpeg type\n", encType);
-        return -1;
-    }
-
-    if (encType == IMP_ENC_TYPE_JPEG) {
-        rcMode = IMP_ENC_RC_MODE_FIXQP;
-    }
-
-    if ((rcMode < IMP_ENC_RC_MODE_FIXQP) || (rcMode > IMP_ENC_RC_MODE_CAPPED_QUALITY)) {
-        IMP_LOG_ERR(TAG, "unsupported rcmode:%d, we only support fixqp, cbr, vbr, capped vbr and capped quality\n", rcMode);
-        return -1;
-    }
-
-    memset(chnAttr, 0, sizeof(IMPEncoderChnAttr));
-
-    ret = IMP_Encoder_SetDefaultParam(chnAttr, profile, rcMode, w, h, outFrmRateNum, outFrmRateDen, outFrmRateNum * 2 / outFrmRateDen,
-            ((rcMode == IMP_ENC_RC_MODE_CAPPED_VBR) || (rcMode == IMP_ENC_RC_MODE_CAPPED_QUALITY)) ? 3 : 1,
-            (rcMode == IMP_ENC_RC_MODE_FIXQP) ? 35 : -1, outBitRate);
-    if (ret < 0) {
-        IMP_LOG_ERR(TAG, "IMP_Encoder_SetDefaultParam failed\n");
-        return -1;
-    }
-
-
-    return 0;
-}
-
-int encoder_init(void)
-{
-	int ret = 0;
-        int  grpNum = 0;
-	IMPEncoderChnAttr chnAttr;
-
-	encoder_param_defalt(&chnAttr, gconf_mainPayLoad, gconf_defRC,gconf_Main_VideoWidth,gconf_Main_VideoHeight, CONFIG_FPS_NUM, CONFIG_FPS_DEN,BITRATE_720P_Kbs);
-
-		/* Creat Encoder Group */
-			ret = IMP_Encoder_CreateGroup(grpNum);
-			if (ret < 0) {
-				IMP_LOG_ERR(TAG, "IMP_Encoder_CreateGroup(%d) error: %d\n", grpNum, ret);
-				return -1;
-			}
-
-		/* Create Channel */
-		ret = IMP_Encoder_CreateChn(0, &chnAttr);
-		if (ret < 0) {
-			IMP_LOG_ERR(TAG, "IMP_Encoder_CreateChn(0) error: %d\n", ret);
-			return -1;
-		}
-
-		/* Resigter Channel */
-	        ret = IMP_Encoder_RegisterChn(grpNum, 0);
-		if (ret < 0) {
-			IMP_LOG_ERR(TAG, "IMP_Encoder_RegisterChn(%d, 0) error: %d\n", grpNum, 0, ret);
-			return -1;
-		}
-
-	return 0;
-}
 
 static int ImpSystemInit()
 {
@@ -147,10 +79,10 @@ static int ImpSystemInit()
 	IMPSensorInfo sensor_info;
 	
 	memset(&sensor_info, 0, sizeof(IMPSensorInfo));
-	memcpy(sensor_info.name, CONFIG_SENSOR_NAME, sizeof(CONFIG_SENSOR_NAME));
-	sensor_info.cbus_type = CONFIG_SENSOR_CUBS_TYPE;
-	memcpy(sensor_info.i2c.type, CONFIG_SENSOR_NAME, sizeof(CONFIG_SENSOR_NAME));
-	sensor_info.i2c.addr = CONFIG_SENSOR_ADDR;
+	memcpy(sensor_info.name, SENSOR_NAME, sizeof(SENSOR_NAME));
+	sensor_info.cbus_type = SENSOR_CUBS_TYPE;
+	memcpy(sensor_info.i2c.type, SENSOR_NAME, sizeof(SENSOR_NAME));
+	sensor_info.i2c.addr = SENSOR_I2C_ADDR;
 
 
 	IMP_LOG_DBG(TAG, "ImpSystemInit start\n");
@@ -181,7 +113,7 @@ static int ImpSystemInit()
 		return -1;
 	}
 
-	ret = IMP_ISP_Tuning_SetSensorFPS(CONFIG_FPS_NUM, CONFIG_FPS_DEN);
+	ret = IMP_ISP_Tuning_SetSensorFPS(SENSOR_FRAME_RATE_NUM, SENSOR_FRAME_RATE_DEN);
 	if (ret < 0){
 		IMP_LOG_ERR(TAG, "failed to set sensor fps\n");
 		return -1;
@@ -205,8 +137,8 @@ static int imp_init(void)
 	/* FrameSource init */
 	IMPFSChnAttr imp_chn_attr[2];
 	imp_chn_attr[0].pixFmt = PIX_FMT_NV12;
-	imp_chn_attr[0].outFrmRateNum = CONFIG_FPS_NUM;
-	imp_chn_attr[0].outFrmRateDen = CONFIG_FPS_DEN;
+	imp_chn_attr[0].outFrmRateNum = SENSOR_FRAME_RATE_NUM;
+	imp_chn_attr[0].outFrmRateDen = SENSOR_FRAME_RATE_DEN;
 	imp_chn_attr[0].nrVBs = 2;
 	imp_chn_attr[0].type = FS_PHY_CHANNEL;
 
@@ -229,7 +161,7 @@ static int imp_init(void)
 	}
 
 	/* Encoder init */
-	ret = encoder_init();
+	ret = encoder_init_demo();
 	if (ret < 0) {
 		IMP_LOG_ERR(TAG, "Encoder init failed\n");
 		return -1;
@@ -291,7 +223,7 @@ VideoInput::VideoInput(UsageEnvironment& env, int streamNum)
 	: Medium(env), fVideoSource(NULL), fpsIsStart(False), fontIsStart(False),
 	  osdIsStart(False), osdStartCnt(0), nrFrmFps(0),
 	  totalLenFps(0), startTimeFps(0), streamNum(streamNum), scheduleTid(-1),
-	  orgfrmRate(CONFIG_FPS_NUM), hasSkipFrame(false),
+	  orgfrmRate(SENSOR_FRAME_RATE_NUM), hasSkipFrame(false),
 	  curPackIndex(0), requestIDR(false) {
 }
 
@@ -385,7 +317,7 @@ int VideoInput::getStream(void* to, unsigned int* len, struct timeval* timestamp
 		totalLenFps += stream_len;
 		if (curPackIndex == 0)
 			nrFrmFps++;
-		if ((nrFrmFps > 0) && ((nrFrmFps % (CONFIG_FPS_NUM * 2 / CONFIG_FPS_NUM)) == 0)) {
+		if ((nrFrmFps > 0) && ((nrFrmFps % (SENSOR_FRAME_RATE_DEN * 2 / SENSOR_FRAME_RATE_DEN)) == 0)) {
 			uint64_t now = IMP_System_GetTimeStamp();
 			uint64_t elapsed = now - startTimeFps;
 
@@ -426,7 +358,7 @@ out:
 int VideoInput::pollingStream(void)
 {
 	int ret;
-    printf("---------->VideoInput::pollingStream<----------\n");
+//    printf("---------->VideoInput::pollingStream<----------\n");
 	ret = IMP_Encoder_PollingStream(streamNum, 2000);
 	if (ret < 0) {
 		IMP_LOG_ERR(TAG, "chnNum:%d, Polling stream timeout\n", streamNum);
