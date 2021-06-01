@@ -379,9 +379,45 @@ int sample_jpeg_init()
 	return 0;
 }
 #ifdef T31
+static int encoder_param_defalt(IMPEncoderChnAttr *chnAttr, IMPEncoderProfile profile, IMPEncoderRcMode rcMode,
+        int w, int h, int outFrmRateNum, int outFrmRateDen, int outBitRate)
+{
+    int ret = 0;
+    IMPEncoderEncType encType = (IMPEncoderEncType)(profile >> 24);
+
+    if ((encType < IMP_ENC_TYPE_AVC) || (encType > IMP_ENC_TYPE_JPEG)) {
+        IMP_LOG_ERR(TAG, "unsupported encode type:%d, we only support avc, hevc and jpeg type\n", encType);
+        return -1;
+    }
+
+    if (encType == IMP_ENC_TYPE_JPEG) {
+        rcMode = IMP_ENC_RC_MODE_FIXQP;
+    }
+
+    if ((rcMode < IMP_ENC_RC_MODE_FIXQP) || (rcMode > IMP_ENC_RC_MODE_CAPPED_QUALITY)) {
+        IMP_LOG_ERR(TAG, "unsupported rcmode:%d, we only support fixqp, cbr, vbr, capped vbr and capped quality\n", rcMode);
+        return -1;
+    }
+
+    memset(chnAttr, 0, sizeof(IMPEncoderChnAttr));
+
+    ret = IMP_Encoder_SetDefaultParam(chnAttr, profile, rcMode, w, h, outFrmRateNum, outFrmRateDen, outFrmRateNum * 2 / outFrmRateDen,
+            ((rcMode == IMP_ENC_RC_MODE_CAPPED_VBR) || (rcMode == IMP_ENC_RC_MODE_CAPPED_QUALITY)) ? 3 : 1,
+            (rcMode == IMP_ENC_RC_MODE_FIXQP) ? 35 : -1, outBitRate);
+    if (ret < 0) {
+        IMP_LOG_ERR(TAG, "IMP_Encoder_SetDefaultParam failed\n");
+        return -1;
+    }
+
+
+    return 0;
+}
+
+IMPEncoderRcMode gconf_defRC_uvc = IMP_ENC_RC_MODE_CAPPED_QUALITY;
 int sample_encoder_init()
 {
-#if 0
+#if 1
+    printf("----------------------------->encoder\n");
 	int i, ret, chnNum = 0;
 	IMPFSChnAttr *imp_chn_attr_tmp;
 	IMPEncoderChnAttr channel_attr;
@@ -392,18 +428,17 @@ int sample_encoder_init()
             chnNum = chn[i].index;
 
             memset(&channel_attr, 0, sizeof(IMPEncoderChnAttr));
-            ret = IMP_Encoder_SetDefaultParam(&channel_attr, chn[i].payloadType, g_RcMode,
-                    imp_chn_attr_tmp->picWidth, imp_chn_attr_tmp->picHeight,
-                    imp_chn_attr_tmp->outFrmRateNum, imp_chn_attr_tmp->outFrmRateDen,
-                    imp_chn_attr_tmp->outFrmRateNum * 2 / imp_chn_attr_tmp->outFrmRateDen, 1,
-                    (g_RcMode == IMP_ENC_RC_MODE_FIXQP) ? 35 : -1,
-                    (uint64_t)g_BitRate * (imp_chn_attr_tmp->picWidth * imp_chn_attr_tmp->picHeight) / (1280 * 720));
+            ret = encoder_param_defalt(&channel_attr,chn[i].payloadType,gconf_defRC_uvc,1920,1080,imp_chn_attr_tmp->outFrmRateNum,imp_chn_attr_tmp->outFrmRateDen,1000);
+            //ret = IMP_Encoder_SetDefaultParam(&channel_attr, chn[i].payloadType, g_RcMode,
+             //       imp_chn_attr_tmp->picWidth, imp_chn_attr_tmp->picHeight,
+             //       imp_chn_attr_tmp->outFrmRateNum, imp_chn_attr_tmp->outFrmRateDen,
+             //       imp_chn_attr_tmp->outFrmRateNum * 2 / imp_chn_attr_tmp->outFrmRateDen, 1,35,1000);
             if (ret < 0) {
                 IMP_LOG_ERR(TAG, "IMP_Encoder_SetDefaultParam(%d) error !\n", chnNum);
                 return -1;
             }
 
-            ret = IMP_Encoder_CreateChn(chnNum, &channel_attr);
+            ret = IMP_Encoder_CreateChn(1, &channel_attr);
             if (ret < 0) {
                 IMP_LOG_ERR(TAG, "IMP_Encoder_CreateChn(%d) error !\n", chnNum);
                 return -1;

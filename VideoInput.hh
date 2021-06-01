@@ -123,4 +123,6 @@ private:
   bool requestIDR;
 };
 
+int encoder_init(void);
+
 #endif

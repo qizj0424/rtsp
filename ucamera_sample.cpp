@@ -20,6 +20,7 @@
 #include <imp/imp_framesource.h>
 #include <imp/imp_encoder.h>
 #include <usbcamera.h>
+#include "VideoInput.hh"
 //#include <AntiCopy_Verify.h>
 #include "imp-common.hh"
 
@@ -1164,15 +1165,16 @@ int imp_sdk_init(int format, int width, int height)
 	}
 
 	/* Step.3 Encoder init */
+    printf("---------->format = %d<------------\n");
 	switch (format) {
 	case V4L2_PIX_FMT_YUYV:
 	case V4L2_PIX_FMT_NV12:
 		break;
 	case V4L2_PIX_FMT_MJPEG:
 		ret = sample_jpeg_init();
-		break;
-	case V4L2_PIX_FMT_H264:
-		ret = sample_encoder_init();
+	//	break;
+	//case V4L2_PIX_FMT_H264:
+		ret = encoder_init();
 		break;
 	}
 	if (ret < 0) {

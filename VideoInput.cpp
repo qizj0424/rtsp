@@ -109,7 +109,7 @@ static int encoder_param_defalt(IMPEncoderChnAttr *chnAttr, IMPEncoderProfile pr
     return 0;
 }
 
-static int encoder_init(void)
+int encoder_init(void)
 {
 	int ret = 0;
         int  grpNum = 0;
@@ -306,8 +306,8 @@ extern "C" {
 bool VideoInput::initialize(UsageEnvironment& env) {
 	int ret;
 
-	ret = imp_init();
-	//ret = pthread_create(&ispTuneTid, NULL, VideoInput::ispAutoTuningThread, NULL);
+	//ret = imp_init();
+	ret = pthread_create(&ispTuneTid, NULL, VideoInput::ispAutoTuningThread, NULL);
 		if (ret < 0) {
 			return false;
 		}
@@ -426,7 +426,7 @@ out:
 int VideoInput::pollingStream(void)
 {
 	int ret;
-
+    printf("---------->VideoInput::pollingStream<----------\n");
 	ret = IMP_Encoder_PollingStream(streamNum, 2000);
 	if (ret < 0) {
 		IMP_LOG_ERR(TAG, "chnNum:%d, Polling stream timeout\n", streamNum);
@@ -441,6 +441,7 @@ int VideoInput::streamOn(void)
 
 	IMP_Encoder_RequestIDR(streamNum);
 	requestIDR = true;
+    printf("---------->VideoInput::streamOn<----------\n");
 
 	int ret = IMP_Encoder_StartRecvPic(streamNum);
 	if (ret < 0) {
@@ -454,6 +455,7 @@ int VideoInput::streamOn(void)
 int VideoInput::streamOff(void)
 {
 	int ret;
+    printf("---------->VideoInput::streamOff<----------\n");
 
 	if (curPackIndex != 0)
 		IMP_Encoder_ReleaseStream(streamNum, &bitStream);
