@@ -231,7 +231,7 @@ int sample_framesource_streamoff()
 	/* Enable channels */
 	for (i = 0; i < FS_CHN_NUM; i++) {
 		if (chn[i].enable){
-			ret = IMP_FrameSource_DisableChn(chn[i].index);
+			ret = IMP_FrameSource_DisableChn(chn[i].index+3);
 			if (ret < 0) {
 				IMP_LOG_ERR(TAG, "IMP_FrameSource_DisableChn(%d) error: %d\n", ret, chn[i].index);
 				return -1;
@@ -271,7 +271,7 @@ int sample_framesource_exit()
 	for (i = 0; i <  FS_CHN_NUM; i++) {
 		if (chn[i].enable) {
 			/*Destroy channel */
-			ret = IMP_FrameSource_DestroyChn(chn[i].index);
+			ret = IMP_FrameSource_DestroyChn(chn[i].index+3);
 			if (ret < 0) {
 				IMP_LOG_ERR(TAG, "IMP_FrameSource_DestroyChn(%d) error: %d\n", chn[i].index, ret);
 				return -1;
@@ -334,7 +334,6 @@ void MakeTables(int q, uint8_t *lqt, uint8_t *cqt)
 int sample_jpeg_init()
 {
 	int i, ret;
-#ifdef T31
 	IMPEncoderChnAttr channel_attr;
 	IMPFSChnAttr *imp_chn_attr_tmp;
 
@@ -345,22 +344,6 @@ int sample_jpeg_init()
             ret = IMP_Encoder_SetDefaultParam(&channel_attr, IMP_ENC_PROFILE_JPEG, IMP_ENC_RC_MODE_FIXQP,
                     imp_chn_attr_tmp->picWidth, imp_chn_attr_tmp->picHeight,
                     imp_chn_attr_tmp->outFrmRateNum, imp_chn_attr_tmp->outFrmRateDen, 0, 0, g_QP, 0);
-#else
-	IMPEncoderAttr *enc_attr;
-	IMPEncoderCHNAttr channel_attr;
-	IMPFSChnAttr *imp_chn_attr_tmp;
-
-	for (i = 0; i <  FS_CHN_NUM; i++) {
-		if (chn[i].enable) {
-			imp_chn_attr_tmp = &chn[i].fs_chn_attr;
-			memset(&channel_attr, 0, sizeof(IMPEncoderCHNAttr));
-			enc_attr = &channel_attr.encAttr;
-			enc_attr->enType = PT_JPEG;
-			enc_attr->bufSize = 0;
-			enc_attr->profile = 0;
-			enc_attr->picWidth = imp_chn_attr_tmp->picWidth;
-			enc_attr->picHeight = imp_chn_attr_tmp->picHeight;
-#endif
 
 			/* IMP_Encoder_SetbufshareChn(3 + chn[i].index, -1); */
 			/* Create Channel */
@@ -530,7 +513,7 @@ int sample_encoder_init()
 
 int sample_jpeg_exit(void)
 {
-    int ret = 0, i = 0, chnNum = 0;
+    int ret = 0, i = 0, chnNum = 3;
 #ifdef T31
     IMPEncoderChnStat chn_stat;
 #else

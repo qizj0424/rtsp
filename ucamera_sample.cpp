@@ -1224,7 +1224,7 @@ int imp_sdk_deinit(int format)
 	if (format == V4L2_PIX_FMT_YUYV || format == V4L2_PIX_FMT_NV12) {
 		/* Step.5 Stream Off */
 		if (chn[0].enable){
-			ret = IMP_FrameSource_DisableChn(chn[0].index);
+			ret = IMP_FrameSource_DisableChn(chn[0].index+3);
 			if (ret < 0) {
 				IMP_LOG_ERR(TAG, "IMP_FrameSource_DisableChn(%d) error: %d\n", ret, chn[0].index);
 				return -1;
@@ -1234,7 +1234,7 @@ int imp_sdk_deinit(int format)
 		/* Step.6 FrameSource exit */
 		if (chn[0].enable) {
 			/*Destroy channel i*/
-			ret = IMP_FrameSource_DestroyChn(0);
+			//ret = IMP_FrameSource_DestroyChn(0);
 			if (ret < 0) {
 				IMP_LOG_ERR(TAG, "IMP_FrameSource_DestroyChn() error: %d\n", ret);
 				return -1;
@@ -1244,7 +1244,7 @@ int imp_sdk_deinit(int format)
 
 		if (format == V4L2_PIX_FMT_H264) {
 		#if 1
-			ret = IMP_Encoder_StopRecvPic(chn[0].index);
+			ret = IMP_Encoder_StopRecvPic(chn[0].index+3);
 			if (ret < 0) {
 				IMP_LOG_ERR(TAG, "IMP_Encoder_StopRecvPic(%d) failed\n", chn[0].index);
 				return -1;
@@ -1264,11 +1264,11 @@ int imp_sdk_deinit(int format)
 		/* Step.b UnBind */
 		for (i = 0; i < FS_CHN_NUM; i++) {
 			if (chn[i].enable) {
-				ret = IMP_System_UnBind(&chn[i].framesource_chn, &chn[i].imp_encoder);
-				if (ret < 0) {
-					IMP_LOG_ERR(TAG, "UnBind FrameSource channel%d and Encoder failed\n",i);
-					return -1;
-				}
+				//ret = IMP_System_UnBind(&chn[i].framesource_chn, &chn[i].imp_encoder);
+				//if (ret < 0) {
+				//	IMP_LOG_ERR(TAG, "UnBind FrameSource channel%d and Encoder failed\n",i);
+				//	return -1;
+				//}
 			}
 		}
 
@@ -1281,7 +1281,7 @@ int imp_sdk_deinit(int format)
 			ret = sample_jpeg_exit();
 			break;
 		case V4L2_PIX_FMT_H264:
-			ret = sample_encoder_exit();
+			//ret = sample_encoder_exit();
 			break;
 		}
 		if (ret < 0) {
@@ -1291,7 +1291,7 @@ int imp_sdk_deinit(int format)
 
 		for (i = 0; i < FS_CHN_NUM; i++) {
 			if (chn[i].enable) {
-				ret = IMP_Encoder_DestroyGroup(chn[i].index);
+				ret = IMP_Encoder_DestroyGroup(chn[i].index+3);
 				if (ret < 0) {
 					IMP_LOG_ERR(TAG, "IMP_Encoder_CreateGroup(%d) error !\n", i);
 					return -1; }
@@ -1307,17 +1307,17 @@ int imp_sdk_deinit(int format)
 	}
 
 	if (g_Power_save) {
-		ret = IMP_ISP_DisableTuning();
-		if(ret < 0){
-			IMP_LOG_ERR(TAG, "IMP_ISP_DisableTuning failed\n");
-			return -1;
-		}
+		//ret = IMP_ISP_DisableTuning();
+		//if(ret < 0){
+		//	IMP_LOG_ERR(TAG, "IMP_ISP_DisableTuning failed\n");
+		//	return -1;
+		//}
 
-		ret = IMP_ISP_DisableSensor();
-		if(ret < 0){
-			IMP_LOG_ERR(TAG, "failed to EnableSensor\n");
-			return -1;
-		}
+		//ret = IMP_ISP_DisableSensor();
+		//if(ret < 0){
+		//	IMP_LOG_ERR(TAG, "failed to EnableSensor\n");
+		//	return -1;
+		//}
 	}
 	focus.data[UVC_CUR] = 100;
 	zoom.data[UVC_CUR] = 100;
