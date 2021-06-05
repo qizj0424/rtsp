@@ -42,7 +42,7 @@ int g_VideoWidth = 1920;
 int g_VideoHeight = 1080;
 int g_i2c_addr = 0x40;
 int g_wdr = 0;
-int g_RcMode = IMP_ENC_RC_MODE_CBR;
+//int g_RcMode = IMP_ENC_RC_MODE_CBR;
 int g_BitRate = 1000;
 int g_gop = SENSOR_FRAME_RATE_NUM;
 int g_adb = 0;
@@ -58,11 +58,13 @@ int g_Dynamic_Fps = 0;
 int g_Power_save = 1;
 char g_Sensor_Name[16] = "jxf37";
 
-int gconf_Main_VideoWidth = SENSOR_WIDTH;
-int gconf_Main_VideoHeight = SENSOR_HEIGHT;
+extern int gconf_Main_VideoWidth;
+extern int gconf_Main_VideoHeight;
 
-IMPEncoderProfile gconf_mainPayLoad =  IMP_ENC_PROFILE_HEVC_MAIN;
-IMPEncoderRcMode gconf_defRC = IMP_ENC_RC_MODE_CAPPED_QUALITY;
+//extern IMPEncoderProfile gconf_mainPayLoad;
+//extern IMPEncoderRcMode gconf_defRC;
+
+IMPEncoderRcMode g_RcMode = IMP_ENC_RC_MODE_CBR;
 
 /*#define SHOW_FRM_BITRATE*/
 #ifdef SHOW_FRM_BITRATE
@@ -366,112 +368,9 @@ int sample_jpeg_init()
 
 	return 0;
 }
-
-static int encoder_param_defalt(IMPEncoderChnAttr *chnAttr, IMPEncoderProfile profile, IMPEncoderRcMode rcMode,
-        int w, int h, int outFrmRateNum, int outFrmRateDen, int outBitRate)
-{
-    int ret = 0;
-    IMPEncoderEncType encType = (IMPEncoderEncType)(profile >> 24);
-
-    if ((encType < IMP_ENC_TYPE_AVC) || (encType > IMP_ENC_TYPE_JPEG)) {
-        IMP_LOG_ERR(TAG, "unsupported encode type:%d, we only support avc, hevc and jpeg type\n", encType);
-        return -1;
-    }
-
-    if (encType == IMP_ENC_TYPE_JPEG) {
-        rcMode = IMP_ENC_RC_MODE_FIXQP;
-    }
-
-    if ((rcMode < IMP_ENC_RC_MODE_FIXQP) || (rcMode > IMP_ENC_RC_MODE_CAPPED_QUALITY)) {
-        IMP_LOG_ERR(TAG, "unsupported rcmode:%d, we only support fixqp, cbr, vbr, capped vbr and capped quality\n", rcMode);
-        return -1;
-    }
-
-    memset(chnAttr, 0, sizeof(IMPEncoderChnAttr));
-
-    ret = IMP_Encoder_SetDefaultParam(chnAttr, profile, rcMode, w, h, outFrmRateNum, outFrmRateDen, outFrmRateNum * 2 / outFrmRateDen,
-            ((rcMode == IMP_ENC_RC_MODE_CAPPED_VBR) || (rcMode == IMP_ENC_RC_MODE_CAPPED_QUALITY)) ? 3 : 1,
-            (rcMode == IMP_ENC_RC_MODE_FIXQP) ? 35 : -1, outBitRate);
-    if (ret < 0) {
-        IMP_LOG_ERR(TAG, "IMP_Encoder_SetDefaultParam failed\n");
-        return -1;
-    }
-
-
-    return 0;
-}
-
-int encoder_init_demo(void)
-{
-	int ret = 0;
-        int  grpNum = 0;
-	IMPEncoderChnAttr chnAttr;
-
-	encoder_param_defalt(&chnAttr, gconf_mainPayLoad, gconf_defRC,gconf_Main_VideoWidth,gconf_Main_VideoHeight,SENSOR_FRAME_RATE_NUM,SENSOR_FRAME_RATE_DEN,BITRATE_720P_Kbs);
-
-		/* Creat Encoder Group */
-			ret = IMP_Encoder_CreateGroup(grpNum);
-			if (ret < 0) {
-				IMP_LOG_ERR(TAG, "IMP_Encoder_CreateGroup(%d) error: %d\n", grpNum, ret);
-				return -1;
-			}
-
-		/* Create Channel */
-		ret = IMP_Encoder_CreateChn(0, &chnAttr);
-		if (ret < 0) {
-			IMP_LOG_ERR(TAG, "IMP_Encoder_CreateChn(0) error: %d\n", ret);
-			return -1;
-		}
-
-		/* Resigter Channel */
-	        ret = IMP_Encoder_RegisterChn(grpNum, 0);
-		if (ret < 0) {
-			IMP_LOG_ERR(TAG, "IMP_Encoder_RegisterChn(%d, 0) error: %d\n", grpNum, 0, ret);
-			return -1;
-		}
-
-	return 0;
-}
-
-#if 0
-static int encoder_param_defalt(IMPEncoderChnAttr *chnAttr, IMPEncoderProfile profile, IMPEncoderRcMode rcMode,
-        int w, int h, int outFrmRateNum, int outFrmRateDen, int outBitRate)
-{
-    int ret = 0;
-    IMPEncoderEncType encType = (IMPEncoderEncType)(profile >> 24);
-
-    if ((encType < IMP_ENC_TYPE_AVC) || (encType > IMP_ENC_TYPE_JPEG)) {
-        IMP_LOG_ERR(TAG, "unsupported encode type:%d, we only support avc, hevc and jpeg type\n", encType);
-        return -1;
-    }
-
-    if (encType == IMP_ENC_TYPE_JPEG) {
-        rcMode = IMP_ENC_RC_MODE_FIXQP;
-    }
-
-    if ((rcMode < IMP_ENC_RC_MODE_FIXQP) || (rcMode > IMP_ENC_RC_MODE_CAPPED_QUALITY)) {
-        IMP_LOG_ERR(TAG, "unsupported rcmode:%d, we only support fixqp, cbr, vbr, capped vbr and capped quality\n", rcMode);
-        return -1;
-    }
-
-    memset(chnAttr, 0, sizeof(IMPEncoderChnAttr));
-
-    ret = IMP_Encoder_SetDefaultParam(chnAttr, profile, rcMode, w, h, outFrmRateNum, outFrmRateDen, outFrmRateNum * 2 / outFrmRateDen,
-            ((rcMode == IMP_ENC_RC_MODE_CAPPED_VBR) || (rcMode == IMP_ENC_RC_MODE_CAPPED_QUALITY)) ? 3 : 1,
-            (rcMode == IMP_ENC_RC_MODE_FIXQP) ? 35 : -1, outBitRate);
-    if (ret < 0) {
-        IMP_LOG_ERR(TAG, "IMP_Encoder_SetDefaultParam failed\n");
-        return -1;
-    }
-
-
-    return 0;
-}
-IMPEncoderRcMode gconf_defRC_uvc = IMP_ENC_RC_MODE_CAPPED_QUALITY;
+#ifdef T31
 int sample_encoder_init()
 {
-#if 1
-    printf("----------------------------->encoder\n");
 	int i, ret, chnNum = 0;
 	IMPFSChnAttr *imp_chn_attr_tmp;
 	IMPEncoderChnAttr channel_attr;
@@ -482,17 +381,18 @@ int sample_encoder_init()
             chnNum = chn[i].index;
 
             memset(&channel_attr, 0, sizeof(IMPEncoderChnAttr));
-            ret = encoder_param_defalt(&channel_attr,chn[i].payloadType,gconf_defRC_uvc,1920,1080,imp_chn_attr_tmp->outFrmRateNum,imp_chn_attr_tmp->outFrmRateDen,1000);
-            //ret = IMP_Encoder_SetDefaultParam(&channel_attr, chn[i].payloadType, g_RcMode,
-             //       imp_chn_attr_tmp->picWidth, imp_chn_attr_tmp->picHeight,
-             //       imp_chn_attr_tmp->outFrmRateNum, imp_chn_attr_tmp->outFrmRateDen,
-             //       imp_chn_attr_tmp->outFrmRateNum * 2 / imp_chn_attr_tmp->outFrmRateDen, 1,35,1000);
+            ret = IMP_Encoder_SetDefaultParam(&channel_attr, chn[i].payloadType, g_RcMode,
+                    imp_chn_attr_tmp->picWidth, imp_chn_attr_tmp->picHeight,
+                    imp_chn_attr_tmp->outFrmRateNum, imp_chn_attr_tmp->outFrmRateDen,
+                    imp_chn_attr_tmp->outFrmRateNum * 2 / imp_chn_attr_tmp->outFrmRateDen, 1,
+                    (g_RcMode == IMP_ENC_RC_MODE_FIXQP) ? 35 : -1,
+                    (uint64_t)g_BitRate * (imp_chn_attr_tmp->picWidth * imp_chn_attr_tmp->picHeight) / (1280 * 720));
             if (ret < 0) {
                 IMP_LOG_ERR(TAG, "IMP_Encoder_SetDefaultParam(%d) error !\n", chnNum);
                 return -1;
             }
 
-            ret = IMP_Encoder_CreateChn(1, &channel_attr);
+            ret = IMP_Encoder_CreateChn(chnNum, &channel_attr);
             if (ret < 0) {
                 IMP_LOG_ERR(TAG, "IMP_Encoder_CreateChn(%d) error !\n", chnNum);
                 return -1;
@@ -505,10 +405,13 @@ int sample_encoder_init()
             }
         }
     }
-#endif
+
 	return 0;
 }
 #endif
+
+
+
 
 
 int sample_jpeg_exit(void)
@@ -591,72 +494,8 @@ int sample_encoder_exit(void)
         }
     }
 #endif
-
-#ifdef T21
-	IMPEncoderCHNStat chn_stat;
-
-	for (i = 0; i <  FS_CHN_NUM; i++) {
-		if (chn[i].enable) {
-            if (chn[i].payloadType == PT_JPEG) {
-                chnNum = 3 + chn[i].index;
-            } else {
-                chnNum = chn[i].index;
-            }
-            memset(&chn_stat, 0, sizeof(IMPEncoderCHNStat));
-            ret = IMP_Encoder_Query(chnNum, &chn_stat);
-            if (ret < 0) {
-                IMP_LOG_ERR(TAG, "IMP_Encoder_Query(%d) error: %d\n", chnNum, ret);
-                return -1;
-            }
-
-            if (chn_stat.registered) {
-                ret = IMP_Encoder_UnRegisterChn(chnNum);
-                if (ret < 0) {
-                    IMP_LOG_ERR(TAG, "IMP_Encoder_UnRegisterChn(%d) error: %d\n", chnNum, ret);
-                    return -1;
-                }
-
-                ret = IMP_Encoder_DestroyChn(chnNum);
-                if (ret < 0) {
-                    IMP_LOG_ERR(TAG, "IMP_Encoder_DestroyChn(%d) error: %d\n", chnNum, ret);
-                    return -1;
-                }
-            }
-        }
-    }
-#endif
-#ifdef T20
-	IMPEncoderCHNStat chn_stat;
-
-	for (i = 0; i <  FS_CHN_NUM; i++) {
-		if (chn[i].enable) {
-			chnNum = chn[i].index;
-			memset(&chn_stat, 0, sizeof(IMPEncoderCHNStat));
-			ret = IMP_Encoder_Query(chnNum, &chn_stat);
-			if (ret < 0) {
-				IMP_LOG_ERR(TAG, "IMP_Encoder_Query(%d) error: %d\n", chnNum, ret);
-				return -1;
-			}
-			if (chn_stat.registered) {
-				ret = IMP_Encoder_UnRegisterChn(chnNum);
-				if (ret < 0) {
-					IMP_LOG_ERR(TAG, "IMP_Encoder_UnRegisterChn(%d) error: %d\n", chnNum, ret);
-					return -1;
-				}
-
-				ret = IMP_Encoder_DestroyChn(chnNum);
-				if (ret < 0) {
-					IMP_LOG_ERR(TAG, "IMP_Encoder_DestroyChn(%d) error: %d\n", chnNum, ret);
-					return -1;
-				}
-			}
-		}
-	}
-#endif
-
-    return 0;
 }
-#ifdef T31
+
 static int get_stream(char *buf, IMPEncoderStream *stream)
 {
 	int i, len = 0;
@@ -679,21 +518,6 @@ static int get_stream(char *buf, IMPEncoderStream *stream)
 	}
 	return len;
 }
-#else
-static int get_stream(char *buf, IMPEncoderStream *stream)
-{
-	int i, nr_pack = stream->packCount;
-	int len = 0;
-
-	//printf("pack count:%d\n", nr_pack);
-	for (i = 0; i < nr_pack; i++) {
-		memcpy((void *)(buf + len), (void *)stream->pack[i].virAddr, stream->pack[i].length);
-		len += stream->pack[i].length;
-	}
-
-	return len;
-}
-#endif
 
 #ifdef SHOW_FRM_BITRATE
 int frame_bitrate_show(IMPEncoderStream *stream)

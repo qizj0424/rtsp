@@ -28,7 +28,7 @@ extern int g_VideoWidth;
 extern int g_VideoHeight;
 extern int g_i2c_addr;
 extern int g_wdr;
-extern int g_RcMode;
+//extern int g_RcMode;
 extern int g_BitRate;
 extern int g_gop;
 extern int g_adb;
@@ -43,6 +43,7 @@ extern int Spk_Volume;
 extern int g_Dynamic_Fps;
 extern int g_Power_save;
 extern char g_Sensor_Name[16];
+extern  IMPEncoderRcMode g_RcMode;
 
 #define SENSOR_FRAME_RATE_NUM	25
 #define SENSOR_FRAME_RATE_NUM_30	30

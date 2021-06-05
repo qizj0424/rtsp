@@ -28,7 +28,6 @@
 #define LABEL_LEN                64
 #define UCAMERA_DEBUG           0
 
-
 #if UCAMERA_DEBUG
 #define Ucamera_DEBUG(format, arg...)                                            \
 	printf("%s: " format "\n" , "[Ucamera]", ## arg)
@@ -826,6 +825,7 @@ int imp_system_init(void)
 
 int imp_isp_tuning_init(void)
 {
+	return 0;
 	int ret, fps_num;
 
 	/* enable turning, to debug graphics */
@@ -839,10 +839,10 @@ int imp_isp_tuning_init(void)
 	IMP_ISP_Tuning_SetSharpness(128);
 	IMP_ISP_Tuning_SetSaturation(128);
 	IMP_ISP_Tuning_SetBrightness(128);
-	IMP_ISP_Tuning_SetHiLightDepress(0);
+	//IMP_ISP_Tuning_SetHiLightDepress(0);
 #ifdef T31
 	/*IMP_ISP_Tuning_SetFrontCrop(&fcrop_obj);*/
-    	IMP_ISP_Tuning_SetBcshHue(hue.data[UVC_CUR]);
+    	IMP_ISP_Tuning_SetBcshHue(128);
 
 	if(auto_exposure_mode.data[UVC_CUR] == 4)
 		sample_video_exposure_time_set(exposure_time.data[UVC_CUR]);
@@ -1098,14 +1098,14 @@ int imp_sdk_init(int format, int width, int height)
 				imp_chn_attr_tmp->scaler.outwidth,
 				imp_chn_attr_tmp->scaler.outheight);
 
-	if (g_Power_save) {
-		ret = IMP_ISP_EnableSensor();
-		if(ret < 0){
-			IMP_LOG_ERR(TAG, "failed to EnableSensor\n");
-			return -1;
-		}
-		imp_isp_tuning_init();
-	}
+	//if (g_Power_save) {
+	//	ret = IMP_ISP_EnableSensor();
+	//	if(ret < 0){
+	//		IMP_LOG_ERR(TAG, "failed to EnableSensor\n");
+	//		return -1;
+	//	}
+	//	imp_isp_tuning_init();
+	//}
 
 
 	/* Step.2 FrameSource init */
@@ -1165,16 +1165,15 @@ int imp_sdk_init(int format, int width, int height)
 	}
 
 	/* Step.3 Encoder init */
-    printf("---------->format = %d<------------\n");
 	switch (format) {
 	case V4L2_PIX_FMT_YUYV:
 	case V4L2_PIX_FMT_NV12:
 		break;
 	case V4L2_PIX_FMT_MJPEG:
 		ret = sample_jpeg_init();
-	//	break;
-	//case V4L2_PIX_FMT_H264:
-		ret = encoder_init_demo();
+		break;
+	case V4L2_PIX_FMT_H264:
+		ret = sample_encoder_init();
 		break;
 	}
 	if (ret < 0) {
@@ -1409,6 +1408,7 @@ int ucamera_load_config(struct Ucamera_Cfg *ucfg )
 		Ucamera_LOG("malloc if line_str is failed\n");
 		return -1;
 	}
+
 	/* printf("\n**********Config Param**********\n"); */
 	while (!feof(uvc_config_fd)) {
 		if (fscanf(uvc_config_fd, "%[^\n]", line_str) < 0)
@@ -1421,6 +1421,7 @@ int ucamera_load_config(struct Ucamera_Cfg *ucfg )
 			fseek(uvc_config_fd , 1, SEEK_CUR);
 			continue;
 		}
+
 		char *ch = strchr(key, ' ');
 		if (ch) *ch = 0;
 		if (strcmp(key, "sensor_name") == 0) {
@@ -1655,7 +1656,6 @@ int speak_volume_write_config(int val)
 static int uvc_event_process(int event_id, void *data)
 {
 	unsigned int intervals = 0;
-               zjqi("--------------->21<-------------");
 
 	switch (event_id) {
 	case UCAMERA_EVENT_STREAMON: {
@@ -1679,8 +1679,8 @@ imp_init_check:
 		}
 #endif
 
-			//return imp_sdk_init(frame->fcc, frame->width, frame->height);
-			return 0;
+			return imp_sdk_init(frame->fcc, frame->width, frame->height);
+			//return 0;
 	}
 	case UCAMERA_EVENT_STREAMOFF: {
 		struct Ucamera_Video_Frame *frame = (struct Ucamera_Video_Frame *) data;
@@ -1754,9 +1754,8 @@ void *ucam_impsdk_init_entry(void *res)
 {
 	int i;
 	//sem_wait(&ucam_ready_sem);
-               zjqi("--------------->12<-------------");
 
-	sample_system_init();
+	//sample_system_init();
 
 	imp_inited = 1;
 	if (g_Audio == 1) {
@@ -1771,7 +1770,7 @@ void *ucam_impsdk_init_entry(void *res)
 	if (g_Speak)
 		sample_audio_play_start();
 	
-    imp_sdk_init(V4L2_PIX_FMT_MJPEG,1920,1080);
+    //imp_sdk_init(V4L2_PIX_FMT_MJPEG,1920,1080);
     return NULL;
 }
 #endif
@@ -2178,7 +2177,6 @@ int uvc_system_init(void)
 	memset(&v_func, 0, sizeof(struct Ucamera_Video_CB_Func));
 	memset(&a_func, 0, sizeof(struct Ucamera_Audio_CB_Func));
 
-               zjqi("--------------->1<-------------");
 #if 0
 	if (AntiCopy_Verify()) {
 		Ucamera_LOG("AntiCopy Verified failed!!!\n");
@@ -2333,7 +2331,7 @@ int uvc_system_init(void)
       	//if (g_Dynamic_Fps)
       		//imp_SensorFPS_Adapture();
         	 usleep(1000*1000*5);
-               zjqi("hello uvc!!!");
+//               zjqi("hello uvc!!!");
 	}
 	return 0;
 }

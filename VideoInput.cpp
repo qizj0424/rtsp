@@ -28,10 +28,14 @@
 #include "H264VideoStreamSource.hh"
 
 #define TAG 						"sample-RTSPServer"
-extern int gconf_Main_VideoWidth;
-extern int gconf_Main_VideoHeight;
 
 pthread_t VideoInput::ispTuneTid = -1;
+
+int gconf_Main_VideoWidth = SENSOR_WIDTH;
+int gconf_Main_VideoHeight = SENSOR_HEIGHT;
+
+IMPEncoderProfile gconf_mainPayLoad =  IMP_ENC_PROFILE_HEVC_MAIN;
+IMPEncoderRcMode gconf_defRC = IMP_ENC_RC_MODE_CAPPED_QUALITY;
 
 Boolean VideoInput::fpsIsOn[MAX_STREAM_CNT] = {False, False};
 Boolean VideoInput::fHaveInitialized = False;
@@ -72,6 +76,71 @@ static int framesource_init(IMPFSChnAttr *imp_chn_attr)
 	return 0;
 }
 
+static int encoder_param_defalt(IMPEncoderChnAttr *chnAttr, IMPEncoderProfile profile, IMPEncoderRcMode rcMode,
+        int w, int h, int outFrmRateNum, int outFrmRateDen, int outBitRate)
+{
+    int ret = 0;
+    IMPEncoderEncType encType = (IMPEncoderEncType)(profile >> 24);
+
+    if ((encType < IMP_ENC_TYPE_AVC) || (encType > IMP_ENC_TYPE_JPEG)) {
+        IMP_LOG_ERR(TAG, "unsupported encode type:%d, we only support avc, hevc and jpeg type\n", encType);
+        return -1;
+    }
+
+    if (encType == IMP_ENC_TYPE_JPEG) {
+        rcMode = IMP_ENC_RC_MODE_FIXQP;
+    }
+
+    if ((rcMode < IMP_ENC_RC_MODE_FIXQP) || (rcMode > IMP_ENC_RC_MODE_CAPPED_QUALITY)) {
+        IMP_LOG_ERR(TAG, "unsupported rcmode:%d, we only support fixqp, cbr, vbr, capped vbr and capped quality\n", rcMode);
+        return -1;
+    }
+
+    memset(chnAttr, 0, sizeof(IMPEncoderChnAttr));
+
+    ret = IMP_Encoder_SetDefaultParam(chnAttr, profile, rcMode, w, h, outFrmRateNum, outFrmRateDen, outFrmRateNum * 2 / outFrmRateDen,
+            ((rcMode == IMP_ENC_RC_MODE_CAPPED_VBR) || (rcMode == IMP_ENC_RC_MODE_CAPPED_QUALITY)) ? 3 : 1,
+            (rcMode == IMP_ENC_RC_MODE_FIXQP) ? 35 : -1, outBitRate);
+    if (ret < 0) {
+        IMP_LOG_ERR(TAG, "IMP_Encoder_SetDefaultParam failed\n");
+        return -1;
+    }
+
+
+    return 0;
+}
+
+static int encoder_init(void)
+{
+	int ret = 0;
+        int  grpNum = 0;
+	IMPEncoderChnAttr chnAttr;
+
+	encoder_param_defalt(&chnAttr, gconf_mainPayLoad, gconf_defRC,gconf_Main_VideoWidth,gconf_Main_VideoHeight, SENSOR_FRAME_RATE_NUM, SENSOR_FRAME_RATE_DEN,BITRATE_720P_Kbs);
+
+		/* Creat Encoder Group */
+			ret = IMP_Encoder_CreateGroup(grpNum);
+			if (ret < 0) {
+				IMP_LOG_ERR(TAG, "IMP_Encoder_CreateGroup(%d) error: %d\n", grpNum, ret);
+				return -1;
+			}
+
+		/* Create Channel */
+		ret = IMP_Encoder_CreateChn(1, &chnAttr);
+		if (ret < 0) {
+			IMP_LOG_ERR(TAG, "IMP_Encoder_CreateChn(0) error: %d\n", ret);
+			return -1;
+		}
+
+		/* Resigter Channel */
+	    ret = IMP_Encoder_RegisterChn(grpNum, 1);
+		if (ret < 0) {
+			IMP_LOG_ERR(TAG, "IMP_Encoder_RegisterChn(%d, 0) error: %d\n", grpNum, 0, ret);
+			return -1;
+		}
+
+	return 0;
+}
 
 static int ImpSystemInit()
 {
@@ -161,7 +230,7 @@ static int imp_init(void)
 	}
 
 	/* Encoder init */
-	ret = encoder_init_demo();
+	ret = encoder_init();
 	if (ret < 0) {
 		IMP_LOG_ERR(TAG, "Encoder init failed\n");
 		return -1;
@@ -238,12 +307,18 @@ extern "C" {
 bool VideoInput::initialize(UsageEnvironment& env) {
 	int ret;
 
-	//ret = imp_init();
-	ret = pthread_create(&ispTuneTid, NULL, VideoInput::ispAutoTuningThread, NULL);
-		if (ret < 0) {
-			return false;
-		}
-       // while(1){}
+	ret = imp_init();
+	if (ret < 0) {
+		return false;
+	}
+    
+    ret = pthread_create(&ispTuneTid, NULL, VideoInput::ispAutoTuningThread, NULL);
+	if (ret < 0) {
+        printf("pthread_create err\n");
+		return false;
+	}
+    
+    
 
 	return true;
 }
@@ -260,7 +335,7 @@ int VideoInput::getStream(void* to, unsigned int* len, struct timeval* timestamp
 	unsigned int  remSize = 0;
 
 	if (curPackIndex == 0) {
-		ret = IMP_Encoder_GetStream(streamNum, &bitStream, 1);
+		ret = IMP_Encoder_GetStream(1, &bitStream, 1);
 		if (ret < 0) {
 			IMP_LOG_ERR(TAG, "IMP_Encoder_GetStream() failed\n");
 			return -1;
@@ -269,7 +344,7 @@ int VideoInput::getStream(void* to, unsigned int* len, struct timeval* timestamp
 
 	if (requestIDR) {
 		if (bitStream.packCount == 1) {
-			IMP_Encoder_ReleaseStream(streamNum, &bitStream);
+			IMP_Encoder_ReleaseStream(1, &bitStream);
 			goto out;
 		} else {
 			requestIDR = false;
@@ -282,7 +357,7 @@ int VideoInput::getStream(void* to, unsigned int* len, struct timeval* timestamp
 		IMP_LOG_WARN(TAG, "drop stream: length=%u, fMaxSize=%d\n", stream_len, fMaxSize);
 		stream_len = 0;
 		curPackIndex = 0;
-		IMP_Encoder_ReleaseStream(streamNum, &bitStream);
+		IMP_Encoder_ReleaseStream(1, &bitStream);
 		requestIDR = true;
 		goto out;
 	}
@@ -302,7 +377,7 @@ int VideoInput::getStream(void* to, unsigned int* len, struct timeval* timestamp
 		curPackIndex = 0;
 
 	if (curPackIndex == 0) {
-		IMP_Encoder_ReleaseStream(streamNum, &bitStream);
+		IMP_Encoder_ReleaseStream(1, &bitStream);
 	}
 
 	gettimeofday(timestamp, NULL);
@@ -359,7 +434,7 @@ int VideoInput::pollingStream(void)
 {
 	int ret;
 //    printf("---------->VideoInput::pollingStream<----------\n");
-	ret = IMP_Encoder_PollingStream(streamNum, 2000);
+	ret = IMP_Encoder_PollingStream(1, 2000);
 	if (ret < 0) {
 		IMP_LOG_ERR(TAG, "chnNum:%d, Polling stream timeout\n", streamNum);
 		return -1;
@@ -371,11 +446,11 @@ int VideoInput::pollingStream(void)
 int VideoInput::streamOn(void)
 {
 
-	IMP_Encoder_RequestIDR(streamNum);
+	IMP_Encoder_RequestIDR(1);
 	requestIDR = true;
     printf("---------->VideoInput::streamOn<----------\n");
 
-	int ret = IMP_Encoder_StartRecvPic(streamNum);
+	int ret = IMP_Encoder_StartRecvPic(1);
 	if (ret < 0) {
 		IMP_LOG_ERR(TAG, "IMP_Encoder_StartRecvPic(%d) failed\n", streamNum);
 		return -1;
