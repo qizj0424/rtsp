@@ -110,7 +110,7 @@ static int encoder_param_defalt(IMPEncoderChnAttr *chnAttr, IMPEncoderProfile pr
     return 0;
 }
 
-static int encoder_init(void)
+static int encoder_init(int streamNum)
 {
 	int ret = 0;
         int  grpNum = 0;
@@ -126,14 +126,14 @@ static int encoder_init(void)
 			}
 
 		/* Create Channel */
-		ret = IMP_Encoder_CreateChn(1, &chnAttr);
+		ret = IMP_Encoder_CreateChn(streamNum, &chnAttr);
 		if (ret < 0) {
 			IMP_LOG_ERR(TAG, "IMP_Encoder_CreateChn(0) error: %d\n", ret);
 			return -1;
 		}
 
 		/* Resigter Channel */
-	    ret = IMP_Encoder_RegisterChn(grpNum, 1);
+	    ret = IMP_Encoder_RegisterChn(grpNum, streamNum);
 		if (ret < 0) {
 			IMP_LOG_ERR(TAG, "IMP_Encoder_RegisterChn(%d, 0) error: %d\n", grpNum, 0, ret);
 			return -1;
@@ -230,7 +230,7 @@ static int imp_init(void)
 	}
 
 	/* Encoder init */
-	ret = encoder_init();
+	ret = encoder_init(1);
 	if (ret < 0) {
 		IMP_LOG_ERR(TAG, "Encoder init failed\n");
 		return -1;
@@ -335,7 +335,7 @@ int VideoInput::getStream(void* to, unsigned int* len, struct timeval* timestamp
 	unsigned int  remSize = 0;
 
 	if (curPackIndex == 0) {
-		ret = IMP_Encoder_GetStream(1, &bitStream, 1);
+		ret = IMP_Encoder_GetStream(streamNum, &bitStream, 1);
 		if (ret < 0) {
 			IMP_LOG_ERR(TAG, "IMP_Encoder_GetStream() failed\n");
 			return -1;
@@ -344,7 +344,7 @@ int VideoInput::getStream(void* to, unsigned int* len, struct timeval* timestamp
 
 	if (requestIDR) {
 		if (bitStream.packCount == 1) {
-			IMP_Encoder_ReleaseStream(1, &bitStream);
+			IMP_Encoder_ReleaseStream(streamNum, &bitStream);
 			goto out;
 		} else {
 			requestIDR = false;
@@ -357,7 +357,7 @@ int VideoInput::getStream(void* to, unsigned int* len, struct timeval* timestamp
 		IMP_LOG_WARN(TAG, "drop stream: length=%u, fMaxSize=%d\n", stream_len, fMaxSize);
 		stream_len = 0;
 		curPackIndex = 0;
-		IMP_Encoder_ReleaseStream(1, &bitStream);
+		IMP_Encoder_ReleaseStream(streamNum, &bitStream);
 		requestIDR = true;
 		goto out;
 	}
@@ -377,7 +377,7 @@ int VideoInput::getStream(void* to, unsigned int* len, struct timeval* timestamp
 		curPackIndex = 0;
 
 	if (curPackIndex == 0) {
-		IMP_Encoder_ReleaseStream(1, &bitStream);
+		IMP_Encoder_ReleaseStream(streamNum, &bitStream);
 	}
 
 	gettimeofday(timestamp, NULL);
@@ -433,8 +433,8 @@ out:
 int VideoInput::pollingStream(void)
 {
 	int ret;
-//    printf("---------->VideoInput::pollingStream<----------\n");
-	ret = IMP_Encoder_PollingStream(1, 2000);
+
+	ret = IMP_Encoder_PollingStream(streamNum, 2000);
 	if (ret < 0) {
 		IMP_LOG_ERR(TAG, "chnNum:%d, Polling stream timeout\n", streamNum);
 		return -1;
@@ -446,11 +446,11 @@ int VideoInput::pollingStream(void)
 int VideoInput::streamOn(void)
 {
 
-	IMP_Encoder_RequestIDR(1);
+	IMP_Encoder_RequestIDR(streamNum);
 	requestIDR = true;
     printf("---------->VideoInput::streamOn<----------\n");
 
-	int ret = IMP_Encoder_StartRecvPic(1);
+	int ret = IMP_Encoder_StartRecvPic(streamNum);
 	if (ret < 0) {
 		IMP_LOG_ERR(TAG, "IMP_Encoder_StartRecvPic(%d) failed\n", streamNum);
 		return -1;

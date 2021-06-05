@@ -31,7 +31,7 @@ int main(int argc, char** argv)
 	TaskScheduler* scheduler = BasicTaskScheduler::createNew();
 	UsageEnvironment* env = BasicUsageEnvironment::createNew(*scheduler);
 
-	VideoInput* videoInput = VideoInput::createNew(*env, 0);
+	VideoInput* videoInput = VideoInput::createNew(*env, 1);
 	if (videoInput == NULL) {
 		printf("Video Input init failed %s: %d\n", __func__, __LINE__);
 		exit(1);
