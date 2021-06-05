@@ -43,13 +43,14 @@ extern int Spk_Volume;
 extern int g_Dynamic_Fps;
 extern int g_Power_save;
 extern char g_Sensor_Name[16];
+
 extern  IMPEncoderRcMode g_RcMode;
 
 #define SENSOR_FRAME_RATE_NUM	25
 #define SENSOR_FRAME_RATE_NUM_30	30
 #define SENSOR_FRAME_RATE_DEN		1
 
-#define SENSOR_JXF37
+#define SENSOR_SC3335
 #define CHN0_EN                 1
 #define CROP_EN					1
 
@@ -86,12 +87,12 @@ extern  IMPEncoderRcMode g_RcMode;
 #define CHN2_EN                 0
 #define CHN3_EN                 1
 #define CROP_EN					0
-#elif defined SENSOR_GC4C33
-#define SENSOR_NAME				"gc4c33"
+#elif defined SENSOR_SC3335
+#define SENSOR_NAME				"sc3335"
 #define SENSOR_CUBS_TYPE        TX_SENSOR_CONTROL_INTERFACE_I2C
-#define SENSOR_I2C_ADDR			0x10
-#define SENSOR_WIDTH			2560
-#define SENSOR_HEIGHT			1440
+#define SENSOR_I2C_ADDR			0x30
+#define SENSOR_WIDTH			2304
+#define SENSOR_HEIGHT			1296
 #define CHN0_EN                 1
 #define CHN1_EN                 0
 #define CHN2_EN                 0
@@ -228,8 +229,9 @@ int sample_ucamera_led_init(int gpio);
 int sample_ucamera_led_ctl(int gpio, int value);
 int speak_volume_write_config(int val);
 
-int encoder_init_demo(void);
+//int imp_config(void);
 int uvc_system_init(void);
+
 
 #ifdef __cplusplus
 #if __cplusplus

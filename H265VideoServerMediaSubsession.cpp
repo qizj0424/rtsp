@@ -12,9 +12,10 @@
 #include "H265VideoStreamDiscreteFramer.hh"
 #include "ByteStreamFileSource.hh"
 #include "VideoInput.hh"
+#include "imp-common.hh"
 
-extern int gconf_Main_VideoWidth;
-extern int gconf_Main_VideoHeight;
+//extern int g_VideoWidth;
+//extern int g_VideoHeight;
 
 H265VideoServerMediaSubsession*
 H265VideoServerMediaSubsession
@@ -102,6 +103,6 @@ RTPSink* H265VideoServerMediaSubsession
 ::createNewRTPSink(Groupsock* rtpGroupsock,
 		   unsigned char rtpPayloadTypeIfDynamic,
 		   FramedSource* /*inputSource*/) {
-	OutPacketBuffer::maxSize = gconf_Main_VideoWidth * gconf_Main_VideoHeight * 2;
+	OutPacketBuffer::maxSize = g_VideoWidth * g_VideoHeight * 2;
 	return H265VideoRTPSink::createNew(envir(), rtpGroupsock, rtpPayloadTypeIfDynamic);
 }

@@ -1,4 +1,4 @@
-cscope 15 $HOME/isvp/proj/application/Tseries_RTSP_demo -q 0000009108 0002193937
+cscope 15 $HOME/isvp/proj/application/Tseries_RTSP_demo -q 0000009106 0002193829
 	@H264VideoServerMediaSubsession.cpp
 
 8 
@@ -29,23 +29,19 @@ cscope 15 $HOME/isvp/proj/application/Tseries_RTSP_demo -q 0000009108 0002193937
 	~"VideoI≈ut.hh
 "
 
-16 
-gc⁄f_Maö_VideoWidth
-;
+15 
+	~"imp-comm⁄.hh
+"
 
-17 
-gc⁄f_Maö_VideoHeight
-;
-
-19 
+20 
 H264VideoSîvîMedüSub£ssi⁄
 *
 
-20 
+21 
 	gH264VideoSîvîMedüSub£ssi⁄
 
 
-21 ::
+22 ::
 	$¸óãNew
 (
 UßgeEnvú⁄mít
@@ -59,7 +55,7 @@ videoI≈ut
 e°im©edBôøã
 ) {
 
-22  
+23  
 √w
  
 	`H264VideoSîvîMedüSub£ssi⁄
@@ -71,15 +67,15 @@ videoI≈ut
 e°im©edBôøã
 );
 
-23 
+24 
 	}
 }
 
-25 
+26 
 	gH264VideoSîvîMedüSub£ssi⁄
 
 
-26 ::
+27 ::
 	$H264VideoSîvîMedüSub£ssi⁄
 (
 UßgeEnvú⁄mít
@@ -93,7 +89,7 @@ videoI≈ut
 e°im©edBôøã
 )
 
-27 : 
+28 : 
 	`OnDem™dSîvîMedüSub£ssi⁄
 (
 ív
@@ -101,7 +97,7 @@ e°im©edBôøã
 True
  ),
 
-28 
+29 
 	`fAuxSDPLöe
 (
 NULL
@@ -111,47 +107,47 @@ NULL
 	`fDummyRTPSök
 (NULL),
 
-29 
+30 
 	$fVideoI≈ut
 (
 videoI≈ut
 ) {
 
-30 
+31 
 fE°im©edKbps
  = (
 e°im©edBôøã
  + 500)/1000;
 
-31 
+32 
 	}
 }
 
-33 
+34 
 	gH264VideoSîvîMedüSub£ssi⁄
 
 
-34 ::~
+35 ::~
 	$H264VideoSîvîMedüSub£ssi⁄
 () {
 
-35 
+36 
 dñëe
 [] 
 fAuxSDPLöe
 ;
 
-36 
+37 
 	}
 }
 
-38 
+39 
 	$a·îPœyögDummy
 (* 
 ˛õ¡D©a
 ) {
 
-39 
+40 
 H264VideoSîvîMedüSub£ssi⁄
 * 
 sub£ss
@@ -159,23 +155,23 @@ sub£ss
 ˛õ¡D©a
 ;
 
-40 
+41 
 sub£ss
 ->
 	`a·îPœyögDummy1
 ();
 
-41 
+42 
 	}
 }
 
-43 
+44 
 	gH264VideoSîvîMedüSub£ssi⁄
 ::
 	$a·îPœyögDummy1
 () {
 
-45 
+46 
 	`ívú
 ().
 	`èskScheduÀr
@@ -185,21 +181,21 @@ sub£ss
 	`√xtTask
 ());
 
-47 
+48 
 	`£tD⁄eFœg
 ();
 
-48 
+49 
 	}
 }
 
-50 
+51 
 	$checkF‹AuxSDPLöe
 (* 
 ˛õ¡D©a
 ) {
 
-51 
+52 
 H264VideoSîvîMedüSub£ssi⁄
 * 
 sub£ss
@@ -207,37 +203,37 @@ sub£ss
 ˛õ¡D©a
 ;
 
-52 
+53 
 sub£ss
 ->
 	`checkF‹AuxSDPLöe1
 ();
 
-53 
+54 
 	}
 }
 
-55 
+56 
 	gH264VideoSîvîMedüSub£ssi⁄
 ::
 	$checkF‹AuxSDPLöe1
 () {
 
-56 c⁄°* 
+57 c⁄°* 
 da¶
 ;
 
-57 i‡(
+58 i‡(
 fAuxSDPLöe
  !
 NULL
 ) {
 
-59 
+60 
 	`£tD⁄eFœg
 ();
 
-60 } i‡(
+61 } i‡(
 fDummyRTPSök
  !
 NULL
@@ -247,7 +243,7 @@ da¶
 	`auxSDPLöe
 ()) != NULL) {
 
-61 
+62 
 fAuxSDPLöe
  = 
 	`°rDup
@@ -255,25 +251,25 @@ fAuxSDPLöe
 da¶
 );
 
-62 
+63 
 fDummyRTPSök
  = 
 NULL
 ;
 
-65 
+66 
 	`£tD⁄eFœg
 ();
 
-67 } i‡(!
+68 } i‡(!
 fD⁄eFœg
 ) {
 
-69 
+70 
 uSecsToDñay
  = 100000;
 
-70 
+71 
 	`√xtTask
 (Ë
 	`ívú
@@ -285,7 +281,7 @@ uSecsToDñay
 uSecsToDñay
 ,
 
-71 (
+72 (
 TaskFunc
 *)
 checkF‹AuxSDPLöe
@@ -293,11 +289,11 @@ checkF‹AuxSDPLöe
 this
 );
 
-73 
+74 
 	}
 }
 
-75 c⁄°* 
+76 c⁄°* 
 	gH264VideoSîvîMedüSub£ssi⁄
 ::
 	$gëAuxSDPLöe
@@ -311,25 +307,25 @@ FømedSour˚
 öputSour˚
 ) {
 
-76 i‡(
+77 i‡(
 fAuxSDPLöe
  !
 NULL
 )  fAuxSDPLine;
 
-78 i‡(
+79 i‡(
 fDummyRTPSök
  =
 NULL
 ) {
 
-82 
+83 
 fDummyRTPSök
  = 
 πpSök
 ;
 
-85 
+86 
 fDummyRTPSök
 ->
 	`°¨tPœyög
@@ -341,13 +337,13 @@ a·îPœyögDummy
 this
 );
 
-88 
+89 
 	`checkF‹AuxSDPLöe
 (
 this
 );
 
-90 
+91 
 	`ívú
 ().
 	`èskScheduÀr
@@ -357,15 +353,15 @@ this
 fD⁄eFœg
 );
 
-91  
+92  
 fAuxSDPLöe
 ;
 
-92 
+93 
 	}
 }
 
-94 
+95 
 FømedSour˚
 * 
 	gH264VideoSîvîMedüSub£ssi⁄
@@ -375,13 +371,13 @@ FømedSour˚
 e°Bôøã
 ) {
 
-95 
+96 
 e°Bôøã
  = 
 fE°im©edKbps
 ;
 
-98  
+99  
 H264VideoSåómDis¸ëeFømî
 ::
 	`¸óãNew
@@ -393,17 +389,17 @@ fVideoI≈ut
 	`videoSour˚
 ());
 
-99 
+100 
 	}
 }
 
-101 
+102 
 RTPSök
 * 
 	gH264VideoSîvîMedüSub£ssi⁄
 
 
-102 ::
+103 ::
 	$¸óãNewRTPSök
 (
 Groupsock
@@ -411,25 +407,25 @@ Groupsock
 πpGroupsock
 ,
 
-103 
+104 
 πpPaylﬂdTy≥IfDy«mic
 ,
 
-104 
+105 
 FømedSour˚
 * ) {
 
-105 
+106 
 OutPackëBuf„r
 ::
 maxSize
  = 
-gc⁄f_Maö_VideoWidth
+g_VideoWidth
  * 
-gc⁄f_Maö_VideoHeight
+g_VideoHeight
  * 2;
 
-106  
+107  
 H264VideoRTPSök
 ::
 	`¸óãNew
@@ -441,7 +437,7 @@ H264VideoRTPSök
 πpPaylﬂdTy≥IfDy«mic
 );
 
-107 
+108 
 	}
 }
 
@@ -1179,23 +1175,19 @@ True
 	~"VideoI≈ut.hh
 "
 
-16 
-gc⁄f_Maö_VideoWidth
-;
+15 
+	~"imp-comm⁄.hh
+"
 
-17 
-gc⁄f_Maö_VideoHeight
-;
-
-19 
+20 
 H265VideoSîvîMedüSub£ssi⁄
 *
 
-20 
+21 
 	gH265VideoSîvîMedüSub£ssi⁄
 
 
-21 ::
+22 ::
 	$¸óãNew
 (
 UßgeEnvú⁄mít
@@ -1209,7 +1201,7 @@ videoI≈ut
 e°im©edBôøã
 ) {
 
-22  
+23  
 √w
  
 	`H265VideoSîvîMedüSub£ssi⁄
@@ -1221,15 +1213,15 @@ videoI≈ut
 e°im©edBôøã
 );
 
-23 
+24 
 	}
 }
 
-25 
+26 
 	gH265VideoSîvîMedüSub£ssi⁄
 
 
-26 ::
+27 ::
 	$H265VideoSîvîMedüSub£ssi⁄
 (
 UßgeEnvú⁄mít
@@ -1243,7 +1235,7 @@ videoI≈ut
 e°im©edBôøã
 )
 
-27 : 
+28 : 
 	`OnDem™dSîvîMedüSub£ssi⁄
 (
 ív
@@ -1251,7 +1243,7 @@ e°im©edBôøã
 True
  ),
 
-28 
+29 
 	`fAuxSDPLöe
 (
 NULL
@@ -1261,47 +1253,47 @@ NULL
 	`fDummyRTPSök
 (NULL),
 
-29 
+30 
 	$fVideoI≈ut
 (
 videoI≈ut
 ) {
 
-30 
+31 
 fE°im©edKbps
  = (
 e°im©edBôøã
  + 500)/1000;
 
-31 
+32 
 	}
 }
 
-33 
+34 
 	gH265VideoSîvîMedüSub£ssi⁄
 
 
-34 ::~
+35 ::~
 	$H265VideoSîvîMedüSub£ssi⁄
 () {
 
-35 
+36 
 dñëe
 [] 
 fAuxSDPLöe
 ;
 
-36 
+37 
 	}
 }
 
-38 
+39 
 	$a·îPœyögDummy
 (* 
 ˛õ¡D©a
 ) {
 
-39 
+40 
 H265VideoSîvîMedüSub£ssi⁄
 * 
 sub£ss
@@ -1309,23 +1301,23 @@ sub£ss
 ˛õ¡D©a
 ;
 
-40 
+41 
 sub£ss
 ->
 	`a·îPœyögDummy1
 ();
 
-41 
+42 
 	}
 }
 
-43 
+44 
 	gH265VideoSîvîMedüSub£ssi⁄
 ::
 	$a·îPœyögDummy1
 () {
 
-45 
+46 
 	`ívú
 ().
 	`èskScheduÀr
@@ -1335,21 +1327,21 @@ sub£ss
 	`√xtTask
 ());
 
-47 
+48 
 	`£tD⁄eFœg
 ();
 
-48 
+49 
 	}
 }
 
-50 
+51 
 	$checkF‹AuxSDPLöe
 (* 
 ˛õ¡D©a
 ) {
 
-51 
+52 
 H265VideoSîvîMedüSub£ssi⁄
 * 
 sub£ss
@@ -1357,37 +1349,37 @@ sub£ss
 ˛õ¡D©a
 ;
 
-52 
+53 
 sub£ss
 ->
 	`checkF‹AuxSDPLöe1
 ();
 
-53 
+54 
 	}
 }
 
-55 
+56 
 	gH265VideoSîvîMedüSub£ssi⁄
 ::
 	$checkF‹AuxSDPLöe1
 () {
 
-56 c⁄°* 
+57 c⁄°* 
 da¶
 ;
 
-57 i‡(
+58 i‡(
 fAuxSDPLöe
  !
 NULL
 ) {
 
-59 
+60 
 	`£tD⁄eFœg
 ();
 
-60 } i‡(
+61 } i‡(
 fDummyRTPSök
  !
 NULL
@@ -1397,7 +1389,7 @@ da¶
 	`auxSDPLöe
 ()) != NULL) {
 
-61 
+62 
 fAuxSDPLöe
  = 
 	`°rDup
@@ -1405,25 +1397,25 @@ fAuxSDPLöe
 da¶
 );
 
-62 
+63 
 fDummyRTPSök
  = 
 NULL
 ;
 
-65 
+66 
 	`£tD⁄eFœg
 ();
 
-67 } i‡(!
+68 } i‡(!
 fD⁄eFœg
 ) {
 
-69 
+70 
 uSecsToDñay
  = 100000;
 
-70 
+71 
 	`√xtTask
 (Ë
 	`ívú
@@ -1435,7 +1427,7 @@ uSecsToDñay
 uSecsToDñay
 ,
 
-71 (
+72 (
 TaskFunc
 *)
 checkF‹AuxSDPLöe
@@ -1443,11 +1435,11 @@ checkF‹AuxSDPLöe
 this
 );
 
-73 
+74 
 	}
 }
 
-75 c⁄°* 
+76 c⁄°* 
 	gH265VideoSîvîMedüSub£ssi⁄
 ::
 	$gëAuxSDPLöe
@@ -1461,25 +1453,25 @@ FømedSour˚
 öputSour˚
 ) {
 
-76 i‡(
+77 i‡(
 fAuxSDPLöe
  !
 NULL
 )  fAuxSDPLine;
 
-78 i‡(
+79 i‡(
 fDummyRTPSök
  =
 NULL
 ) {
 
-82 
+83 
 fDummyRTPSök
  = 
 πpSök
 ;
 
-85 
+86 
 fDummyRTPSök
 ->
 	`°¨tPœyög
@@ -1491,13 +1483,13 @@ a·îPœyögDummy
 this
 );
 
-88 
+89 
 	`checkF‹AuxSDPLöe
 (
 this
 );
 
-90 
+91 
 	`ívú
 ().
 	`èskScheduÀr
@@ -1507,15 +1499,15 @@ this
 fD⁄eFœg
 );
 
-91  
+92  
 fAuxSDPLöe
 ;
 
-92 
+93 
 	}
 }
 
-94 
+95 
 FømedSour˚
 * 
 	gH265VideoSîvîMedüSub£ssi⁄
@@ -1525,13 +1517,13 @@ FømedSour˚
 e°Bôøã
 ) {
 
-95 
+96 
 e°Bôøã
  = 
 fE°im©edKbps
 ;
 
-98  
+99  
 H265VideoSåómDis¸ëeFømî
 ::
 	`¸óãNew
@@ -1543,17 +1535,17 @@ fVideoI≈ut
 	`videoSour˚
 ());
 
-99 
+100 
 	}
 }
 
-101 
+102 
 RTPSök
 * 
 	gH265VideoSîvîMedüSub£ssi⁄
 
 
-102 ::
+103 ::
 	$¸óãNewRTPSök
 (
 Groupsock
@@ -1561,25 +1553,25 @@ Groupsock
 πpGroupsock
 ,
 
-103 
+104 
 πpPaylﬂdTy≥IfDy«mic
 ,
 
-104 
+105 
 FømedSour˚
 * ) {
 
-105 
+106 
 OutPackëBuf„r
 ::
 maxSize
  = 
-gc⁄f_Maö_VideoWidth
+g_VideoWidth
  * 
-gc⁄f_Maö_VideoHeight
+g_VideoHeight
  * 2;
 
-106  
+107  
 H265VideoRTPSök
 ::
 	`¸óãNew
@@ -1591,7 +1583,7 @@ H265VideoRTPSök
 πpPaylﬂdTy≥IfDy«mic
 );
 
-107 
+108 
 	}
 }
 
@@ -2334,48 +2326,44 @@ True
 "
 
 12 
-	~"RTSPSîvî.hh
+	~"imp-comm⁄.hh
 "
 
 13 
+	~"RTSPSîvî.hh
+"
+
+14 
 	~<°dio.h
 >
 
-15 
+16 
 p‹tNumBôs
  
 	gπ•SîvîP‹tNum
  = 8554;
 
-16 * 
+17 * 
 	g°ªamDes¸ùti⁄
  = 
 °rDup
 ("RTSP/RTP stream from Ingenic Media");
 
-18 
+19 
 IMPEncodîProfûe
  
 gc⁄f_maöPayLﬂd
 ;
 
-19 
-gc⁄f_Maö_VideoWidth
-;
-
-20 
-gc⁄f_Maö_VideoHeight
-;
-
-22 
+21 
 	#BR_AT_1M
  2000000
 
-23 
+22 
 
 	)
 
-24 
+23 
 ölöe
  
 	$ˇlc_bô_øã
@@ -2385,7 +2373,7 @@ width
 height
 )
 
-26  
+25  
 BR_AT_1M
  * 
 width
@@ -2393,11 +2381,11 @@ width
 height
  / 720;
 
-27 
+26 
 	}
 }
 
-28 
+27 
 	$maö
 (
 ¨gc
@@ -2405,7 +2393,7 @@ height
 ¨gv
 )
 
-31 
+30 
 TaskScheduÀr
 * 
 scheduÀr
@@ -2415,7 +2403,7 @@ BasicTaskScheduÀr
 	`¸óãNew
 ();
 
-32 
+31 
 UßgeEnvú⁄mít
 * 
 ív
@@ -2427,7 +2415,7 @@ BasicUßgeEnvú⁄mít
 scheduÀr
 );
 
-34 
+33 
 VideoI≈ut
 * 
 videoI≈ut
@@ -2435,15 +2423,15 @@ videoI≈ut
 	`¸óãNew
 (*
 ív
-, 0);
+, 1);
 
-35 i‡(
+34 i‡(
 videoI≈ut
  =
 NULL
 ) {
 
-36 
+35 
 	`¥ötf
 ("VideÿI≈uàöô faûed %s: %d\n", 
 __func__
@@ -2451,11 +2439,11 @@ __func__
 __LINE__
 );
 
-37 
+36 
 	`exô
 (1);
 
-41 
+40 
 RTSPSîvî
 * 
 π•Sîvî
@@ -2463,7 +2451,7 @@ RTSPSîvî
 NULL
 ;
 
-43 
+42 
 π•Sîvî
  = 
 RTSPSîvî
@@ -2477,13 +2465,13 @@ RTSPSîvî
 NULL
 );
 
-44 i‡(
+43 i‡(
 π•Sîvî
  =
 NULL
 ) {
 
-45 
+44 
 	`¥ötf
 ("FaûedÅÿ¸óã RTSP sîvî %s: %d\n", 
 __func__
@@ -2491,17 +2479,17 @@ __func__
 __LINE__
 );
 
-46 
+45 
 	`exô
 (1);
 
-49 
+48 
 SîvîMedüSessi⁄
 * 
 sms_maö
  =
 
-50 
+49 
 SîvîMedüSessi⁄
 ::
 	`¸óãNew
@@ -2515,13 +2503,13 @@ NULL
 FÆ£
 );
 
-53 i‡((
+52 i‡((
 gc⁄f_maöPayLﬂd
  >> 24Ë=
 IMP_ENC_TYPE_AVC
 ) {
 
-54 
+53 
 sms_maö
 ->
 	`addSub£ssi⁄
@@ -2536,12 +2524,12 @@ videoI≈ut
 , 
 	`ˇlc_bô_øã
 (
-gc⁄f_Maö_VideoWidth
+g_VideoWidth
 , 
-gc⁄f_Maö_VideoHeight
+g_VideoHeight
 )));
 
-56 
+55 
 sms_maö
 ->
 	`addSub£ssi⁄
@@ -2557,7 +2545,7 @@ videoI≈ut
 	`ˇlc_bô_øã
 (1920,1080)));
 
-60 
+59 
 π•Sîvî
 ->
 	`addSîvîMedüSessi⁄
@@ -2565,7 +2553,7 @@ videoI≈ut
 sms_maö
 );
 
-61 *
+60 *
 uæ
  = 
 π•Sîvî
@@ -2575,19 +2563,19 @@ uæ
 sms_maö
 );
 
-62 
+61 
 	`¥ötf
 ("PœyÅhi†videÿ°ªam usögÅhêURL: %s\n", 
 uæ
 );
 
-63 
+62 
 dñëe
 [] 
 uæ
 ;
 
-66 
+65 
 ív
 ->
 	`èskScheduÀr
@@ -2595,7 +2583,7 @@ uæ
 	`doEvítLo›
 ();
 
-70 
+69 
 	}
 }
 
@@ -2690,18 +2678,6 @@ uæ
 ::
 i•Tu√Tid
  = -1;
-
-34 
-	ggc⁄f_Maö_VideoWidth
- = 
-SENSOR_WIDTH
-;
-
-35 
-	ggc⁄f_Maö_VideoHeight
- = 
-SENSOR_HEIGHT
-;
 
 37 
 IMPEncodîProfûe
@@ -2997,7 +2973,9 @@ TAG
 
 113 
 	$ícodî_öô
-()
+(
+°ªamNum
+)
 
 115 
 ªt
@@ -3022,15 +3000,15 @@ gc⁄f_maöPayLﬂd
 , 
 gc⁄f_defRC
 ,
-gc⁄f_Maö_VideoWidth
+g_VideoWidth
 ,
-gc⁄f_Maö_VideoHeight
+g_VideoHeight
 , 
-SENSOR_FRAME_RATE_NUM
+g_Fps_Num
 , 
 SENSOR_FRAME_RATE_DEN
 ,
-BITRATE_720P_Kbs
+g_BôR©e
 );
 
 122 
@@ -3059,7 +3037,9 @@ gΩNum
 ªt
  = 
 	`IMP_Encodî_Cª©eChn
-(1, &
+(
+°ªamNum
+, &
 chnAâr
 );
 
@@ -3081,7 +3061,9 @@ TAG
 	`IMP_Encodî_Regi°îChn
 (
 gΩNum
-, 1);
+, 
+°ªamNum
+);
 
 137 i‡(
 ªt
@@ -3130,8 +3112,8 @@ IMPSís‹Info
 .
 «me
 , 
-SENSOR_NAME
-, (SENSOR_NAME));
+g_Sís‹_Name
+, (g_Sensor_Name));
 
 152 
 £ns‹_öfo
@@ -3150,8 +3132,8 @@ i2c
 .
 ty≥
 , 
-SENSOR_NAME
-, (SENSOR_NAME));
+g_Sís‹_Name
+, (g_Sensor_Name));
 
 154 
 £ns‹_öfo
@@ -3160,7 +3142,7 @@ i2c
 .
 addr
  = 
-SENSOR_I2C_ADDR
+g_i2c_addr
 ;
 
 157 
@@ -3244,7 +3226,7 @@ TAG
  = 
 	`IMP_ISP_Tunög_SëSís‹FPS
 (
-SENSOR_FRAME_RATE_NUM
+g_Fps_Num
 , 
 SENSOR_FRAME_RATE_DEN
 );
@@ -3312,7 +3294,7 @@ imp_chn_©å
 [0].
 outFrmR©eNum
  = 
-SENSOR_FRAME_RATE_NUM
+g_Fps_Num
 ;
 
 210 
@@ -3368,7 +3350,7 @@ imp_chn_©å
 .
 width
  = 
-gc⁄f_Maö_VideoWidth
+g_VideoWidth
 ;
 
 219 
@@ -3378,7 +3360,7 @@ imp_chn_©å
 .
 height
  = 
-gc⁄f_Maö_VideoHeight
+g_VideoHeight
 ;
 
 221 
@@ -3394,7 +3376,7 @@ imp_chn_©å
 [0].
 picWidth
  = 
-gc⁄f_Maö_VideoWidth
+g_VideoWidth
 ;
 
 224 
@@ -3402,7 +3384,7 @@ imp_chn_©å
 [0].
 picHeight
  = 
-gc⁄f_Maö_VideoHeight
+g_VideoHeight
 ;
 
 226 
@@ -3427,7 +3409,7 @@ TAG
 ªt
  = 
 	`ícodî_öô
-();
+(1);
 
 234 i‡(
 ªt
@@ -3481,13 +3463,13 @@ TAG
 
 249 
 	`IMP_FømeSour˚_SëFømeDïth
-(1, 0);
+(0, 0);
 
 251 
 ªt
  = 
 	`IMP_FømeSour˚_E«bÀChn
-(1);
+(0);
 
 252 i‡(
 ªt
@@ -3678,7 +3660,7 @@ FÆ£
 295 
 	`‹g‰mR©e
 (
-SENSOR_FRAME_RATE_NUM
+g_Fps_Num
 ), 
 	`hasSkùFøme
 (
@@ -3740,38 +3722,56 @@ UßgeEnvú⁄mít
 310 
 ªt
  = 
-	`imp_öô
+	`imp_c⁄fig
 ();
 
 311 i‡(
 ªt
  < 0) {
 
-312  
+312 
+	`¥ötf
+("imp_configÉrr\n");
+
+313  
 Ál£
 ;
 
-316 i‡(
+316 
+ªt
+ = 
+	`imp_öô
+();
+
+317 i‡(
 ªt
  < 0) {
-
-317 
-	`¥ötf
-("pthread_createÉrr\n");
 
 318  
 Ál£
 ;
 
-323  
+322 i‡(
+ªt
+ < 0) {
+
+323 
+	`¥ötf
+("pthread_createÉrr\n");
+
+324  
+Ál£
+;
+
+329  
 åue
 ;
 
-324 
+330 
 	}
 }
 
-326 
+332 
 FømedSour˚
 * 
 VideoI≈ut
@@ -3779,13 +3779,13 @@ VideoI≈ut
 	$videoSour˚
 () {
 
-327 
+333 
 	`IMP_Encodî_FlushSåóm
 (
 °ªamNum
 );
 
-328 
+334 
 fVideoSour˚
  = 
 √w
@@ -3797,15 +3797,15 @@ fVideoSour˚
 this
 );
 
-329  
+335  
 fVideoSour˚
 ;
 
-330 
+336 
 	}
 }
 
-332 
+338 
 VideoI≈ut
 ::
 	$gëSåóm
@@ -3821,23 +3821,23 @@ time°amp
 fMaxSize
 ) {
 
-333 
+339 
 ªt
 ;
 
-334 
+340 
 °ªam_Àn
  = 0;
 
-335 
+341 
 ªmSize
  = 0;
 
-337 i‡(
+343 i‡(
 curPackIndex
  == 0) {
 
-338 
+344 
 ªt
  = 
 	`IMP_Encodî_GëSåóm
@@ -3847,27 +3847,27 @@ curPackIndex
 bôSåóm
 , 1);
 
-339 i‡(
+345 i‡(
 ªt
  < 0) {
 
-340 
+346 
 	`IMP_LOG_ERR
 (
 TAG
 , "IMP_Encoder_GetStream() failed\n");
 
-345 i‡(
+351 i‡(
 ªque°IDR
 ) {
 
-346 i‡(
+352 i‡(
 bôSåóm
 .
 ∑ckCou¡
  == 1) {
 
-347 
+353 
 	`IMP_Encodî_Rñó£Såóm
 (
 °ªamNum
@@ -3875,17 +3875,17 @@ bôSåóm
 bôSåóm
 );
 
-348 
+354 
 out
 ;
 
-350 
+356 
 ªque°IDR
  = 
 Ál£
 ;
 
-354 
+360 
 °ªam_Àn
  = 
 bôSåóm
@@ -3897,13 +3897,13 @@ curPackIndex
 Àngth
  - 4;
 
-356 i‡(
+362 i‡(
 °ªam_Àn
  > 
 fMaxSize
 ) {
 
-357 
+363 
 	`IMP_LOG_WARN
 (
 TAG
@@ -3913,15 +3913,15 @@ TAG
 fMaxSize
 );
 
-358 
+364 
 °ªam_Àn
  = 0;
 
-359 
+365 
 curPackIndex
  = 0;
 
-360 
+366 
 	`IMP_Encodî_Rñó£Såóm
 (
 °ªamNum
@@ -3929,17 +3929,17 @@ curPackIndex
 bôSåóm
 );
 
-361 
+367 
 ªque°IDR
  = 
 åue
 ;
 
-362 
+368 
 out
 ;
 
-364 
+370 
 ªmSize
  = 
 bôSåóm
@@ -3953,7 +3953,7 @@ curPackIndex
 off£t
 ;
 
-365 i‡(
+371 i‡(
 ªmSize
  < 
 bôSåóm
@@ -3965,13 +3965,13 @@ curPackIndex
 Àngth
 ) {
 
-366 
+372 
 	`mem˝y
 ((*)(()
 to
 ),
 
-367 (*)(
+373 (*)(
 bôSåóm
 .
 vúAddr
@@ -3985,7 +3985,7 @@ off£t
 ªmSize
  - 4);
 
-368 
+374 
 	`mem˝y
 ((*)(()
 to
@@ -4003,13 +4003,13 @@ curPackIndex
 Àngth
  -ÑemSize));
 
-370 
+376 
 	`mem˝y
 ((*)(()
 to
 ),
 
-371 (*)(
+377 (*)(
 bôSåóm
 .
 vúAddr
@@ -4023,7 +4023,7 @@ off£t
 °ªam_Àn
 );
 
-374 i‡(
+380 i‡(
 curPackIndex
  < 
 bôSåóm
@@ -4031,11 +4031,11 @@ bôSåóm
 ∑ckCou¡
  - 1)
 
-375 
+381 
 curPackIndex
 ++;
 
-376 i‡(
+382 i‡(
 curPackIndex
  =
 bôSåóm
@@ -4043,15 +4043,15 @@ bôSåóm
 ∑ckCou¡
  - 1)
 
-377 
+383 
 curPackIndex
  = 0;
 
-379 i‡(
+385 i‡(
 curPackIndex
  == 0) {
 
-380 
+386 
 	`IMP_Encodî_Rñó£Såóm
 (
 °ªamNum
@@ -4059,7 +4059,7 @@ curPackIndex
 bôSåóm
 );
 
-383 
+389 
 	`gëtimeofday
 (
 time°amp
@@ -4067,59 +4067,59 @@ time°amp
 NULL
 );
 
-385 i‡(
+391 i‡(
 ÂsIsOn
 [
 °ªamNum
 ]) {
 
-386 i‡(
+392 i‡(
 ÂsIsSèπ
  =
 FÆ£
 ) {
 
-387 
+393 
 ÂsIsSèπ
  = 
 True
 ;
 
-388 
+394 
 ƒFrmFps
  = 0;
 
-389 
+395 
 tŸÆLíFps
  = 0;
 
-390 
+396 
 °¨tTimeFps
  = 
 	`IMP_Sy°em_GëTimeSèmp
 ();
 
-392 
+398 
 tŸÆLíFps
  +
 °ªam_Àn
 ;
 
-393 i‡(
+399 i‡(
 curPackIndex
  == 0)
 
-394 
+400 
 ƒFrmFps
 ++;
 
-395 i‡((
+401 i‡((
 ƒFrmFps
  > 0Ë&& (“rFrmFp†% (
 SENSOR_FRAME_RATE_DEN
  * 2 / SENSOR_FRAME_RATE_DEN)) == 0)) {
 
-396 
+402 
 uöt64_t
  
 now
@@ -4127,7 +4127,7 @@ now
 	`IMP_Sy°em_GëTimeSèmp
 ();
 
-397 
+403 
 uöt64_t
  
 ñ≠£d
@@ -4137,7 +4137,7 @@ now
 °¨tTimeFps
 ;
 
-399 
+405 
 Âs
  = 
 ƒFrmFps
@@ -4145,7 +4145,7 @@ now
 ñ≠£d
  > 0 ?Élapsed : 1);
 
-400 
+406 
 kbôøã
  = ()
 tŸÆLíFps
@@ -4153,7 +4153,7 @@ tŸÆLíFps
 ñ≠£d
  > 0 ?Élapsed : 1);
 
-403 
+409 
 	`¥ötf
 ("\r°ªamNum[%d]:FPS: %0.2f,Bôøã: %0.2f(kbps)", 
 °ªamNum
@@ -4163,27 +4163,27 @@ tŸÆLíFps
 kbôøã
 );
 
-404 
+410 
 	`fÊush
 (
 °dout
 );
 
-405 #ifde‡
+411 #ifde‡
 SUPPORTCLASSOSD
 
 
-406 if(
+412 if(
 gFPSShowEn
  =
 åue
 ) {
 
-407 
+413 
 °r
 [50] = {0};
 
-409 
+415 
 	`•rötf
 (
 °r
@@ -4193,11 +4193,11 @@ gFPSShowEn
 kbôøã
 /8, "KB");
 
-410 if(
+416 if(
 °ªamNum
  == 0)
 
-411 
+417 
 gOSDFPSShow
 ->
 	`SåögWrôe
@@ -4205,11 +4205,11 @@ gOSDFPSShow
 °r
 );
 
-412 if(
+418 if(
 °ªamNum
  == 1)
 
-413 
+419 
 gOSDFPSShow_£c
 ->
 	`SåögWrôe
@@ -4217,7 +4217,7 @@ gOSDFPSShow_£c
 °r
 );
 
-416 
+422 
 gFps
 [
 °ªamNum
@@ -4225,7 +4225,7 @@ gFps
 Âs
 ;
 
-417 
+423 
 gBôR©e
 [
 °ªamNum
@@ -4233,55 +4233,55 @@ gBôR©e
 kbôøã
 ;
 
-419 
+425 
 °¨tTimeFps
  = 
 now
 ;
 
-420 
+426 
 tŸÆLíFps
  = 0;
 
-421 
+427 
 ƒFrmFps
  = 0;
 
-423 } i‡(
+429 } i‡(
 ÂsIsSèπ
 ) {
 
-424 
+430 
 ÂsIsSèπ
  = 
 FÆ£
 ;
 
-427 
+433 
 out
 :
 
-428 *
+434 *
 Àn
  = 
 °ªam_Àn
 ;
 
-431 
+437 
 	}
 }
 
-433 
+439 
 VideoI≈ut
 ::
 	$pﬁlögSåóm
 ()
 
-435 
+441 
 ªt
 ;
 
-437 
+443 
 ªt
  = 
 	`IMP_Encodî_PﬁlögSåóm
@@ -4289,11 +4289,11 @@ VideoI≈ut
 °ªamNum
 , 2000);
 
-438 i‡(
+444 i‡(
 ªt
  < 0) {
 
-439 
+445 
 	`IMP_LOG_ERR
 (
 TAG
@@ -4301,33 +4301,33 @@ TAG
 °ªamNum
 );
 
-444 
+450 
 	}
 }
 
-446 
+452 
 VideoI≈ut
 ::
 	$°ªamOn
 ()
 
-449 
+455 
 	`IMP_Encodî_Reque°IDR
 (
 °ªamNum
 );
 
-450 
+456 
 ªque°IDR
  = 
 åue
 ;
 
-451 
+457 
 	`¥ötf
 ("---------->VideoInput::streamOn<----------\n");
 
-453 
+459 
 ªt
  = 
 	`IMP_Encodî_SèπRecvPic
@@ -4335,11 +4335,11 @@ VideoI≈ut
 °ªamNum
 );
 
-454 i‡(
+460 i‡(
 ªt
  < 0) {
 
-455 
+461 
 	`IMP_LOG_ERR
 (
 TAG
@@ -4347,29 +4347,29 @@ TAG
 °ªamNum
 );
 
-460 
+466 
 	}
 }
 
-462 
+468 
 VideoI≈ut
 ::
 	$°ªamOff
 ()
 
-464 
+470 
 ªt
 ;
 
-465 
+471 
 	`¥ötf
 ("---------->VideoInput::streamOff<----------\n");
 
-467 i‡(
+473 i‡(
 curPackIndex
  != 0)
 
-468 
+474 
 	`IMP_Encodî_Rñó£Såóm
 (
 °ªamNum
@@ -4377,7 +4377,7 @@ curPackIndex
 bôSåóm
 );
 
-470 
+476 
 ªt
  = 
 	`IMP_Encodî_St›RecvPic
@@ -4385,11 +4385,11 @@ bôSåóm
 °ªamNum
 );
 
-471 i‡(
+477 i‡(
 ªt
  < 0) {
 
-472 
+478 
 	`IMP_LOG_ERR
 (
 TAG
@@ -4397,7 +4397,7 @@ TAG
 °ªamNum
 );
 
-477 
+483 
 	}
 }
 
@@ -5095,15 +5095,21 @@ SENSOR_FRAME_RATE_NUM
 
 41 
 	gg_VideoWidth
- = 1920;
+ = 
+SENSOR_WIDTH
+;
 
 42 
 	gg_VideoHeight
- = 1080;
+ = 
+SENSOR_HEIGHT
+;
 
 43 
 	gg_i2c_addr
- = 0x40;
+ = 
+SENSOR_I2C_ADDR
+;
 
 44 
 	gg_wdr
@@ -5111,7 +5117,9 @@ SENSOR_FRAME_RATE_NUM
 
 46 
 	gg_BôR©e
- = 1000;
+ = 
+BITRATE_720P_Kbs
+;
 
 47 
 	gg_g›
@@ -5165,14 +5173,8 @@ SENSOR_FRAME_RATE_NUM
 
 59 
 	gg_Sís‹_Name
-[16] = "jxf37";
-
-61 
-gc⁄f_Maö_VideoWidth
-;
-
-62 
-gc⁄f_Maö_VideoHeight
+[16] = 
+SENSOR_NAME
 ;
 
 67 
@@ -5316,7 +5318,7 @@ SENSOR_HEIGHT_THIRD
 99 .
 	goutFrmR©eNum
  = 
-SENSOR_FRAME_RATE_NUM
+g_Fps_Num
 ,
 
 100 .
@@ -10166,7 +10168,7 @@ g_RcMode
 	)
 
 52 
-	#SENSOR_JXF37
+	#SENSOR_SC3335
 
 
 	)
@@ -10390,12 +10392,12 @@ TX_SENSOR_CONTROL_INTERFACE_I2C
 89 #ñi‡
 deföed
  
-SENSOR_GC4C33
+SENSOR_SC3335
 
 
 90 
 	#SENSOR_NAME
- "gc4c33"
+ "sc3335"
 
 	)
 
@@ -10409,19 +10411,19 @@ TX_SENSOR_CONTROL_INTERFACE_I2C
 
 92 
 	#SENSOR_I2C_ADDR
- 0x10
+ 0x30
 
 	)
 
 93 
 	#SENSOR_WIDTH
- 2560
+ 2304
 
 	)
 
 94 
 	#SENSOR_HEIGHT
- 1440
+ 1296
 
 	)
 
@@ -10996,18 +10998,18 @@ vÆ
 );
 
 231 
-ícodî_öô_demo
+imp_c⁄fig
 ();
 
 232 
 uvc_sy°em_öô
 ();
 
-234 #ifde‡
+235 #ifde‡
 __˝lu•lus
 
 
-235 #i‡
+236 #i‡
 __˝lu•lus
 
 
@@ -346975,7 +346977,7 @@ imp_chn_©å_tmp
 sˇÀr
 .
 íabÀ
- = 1;
+ = 0;
 
 936 
 imp_chn_©å_tmp
@@ -347009,7 +347011,7 @@ imp_chn_©å_tmp
 ¸›
 .
 íabÀ
- = 1;
+ = 0;
 
 942 
 imp_chn_©å_tmp
@@ -347059,7 +347061,7 @@ imp_chn_©å_tmp
 sˇÀr
 .
 íabÀ
- = 1;
+ = 0;
 
 953 
 imp_chn_©å_tmp
@@ -347093,7 +347095,7 @@ imp_chn_©å_tmp
 ¸›
 .
 íabÀ
- = 1;
+ = 0;
 
 959 
 imp_chn_©å_tmp
@@ -347161,7 +347163,7 @@ imp_chn_©å_tmp
 sˇÀr
 .
 íabÀ
- = 1;
+ = 0;
 
 973 
 imp_chn_©å_tmp
@@ -347203,7 +347205,7 @@ imp_chn_©å_tmp
 ¸›
 .
 íabÀ
- = 1;
+ = 0;
 
 982 
 imp_chn_©å_tmp
@@ -347259,7 +347261,7 @@ imp_chn_©å_tmp
 sˇÀr
 .
 íabÀ
- = 1;
+ = 0;
 
 994 
 imp_chn_©å_tmp
@@ -347301,7 +347303,7 @@ imp_chn_©å_tmp
 ¸›
 .
 íabÀ
- = 1;
+ = 0;
 
 1003 
 imp_chn_©å_tmp
@@ -347369,7 +347371,7 @@ imp_chn_©å_tmp
 ¸›
 .
 íabÀ
- = 1;
+ = 0;
 
 1018 
 imp_chn_©å_tmp
@@ -347429,7 +347431,7 @@ imp_chn_©å_tmp
 sˇÀr
 .
 íabÀ
- = 1;
+ = 0;
 
 1029 
 imp_chn_©å_tmp
@@ -347471,7 +347473,7 @@ imp_chn_©å_tmp
 ¸›
 .
 íabÀ
- = 1;
+ = 0;
 
 1039 
 imp_chn_©å_tmp
@@ -347531,7 +347533,7 @@ imp_chn_©å_tmp
 sˇÀr
 .
 íabÀ
- = 1;
+ = 0;
 
 1050 
 imp_chn_©å_tmp
@@ -351619,37 +351621,55 @@ __LINE__
 	}
 }
 
-2171 
+2170 
+Uˇmîa_Cfg
+ 
+	gucfg
+;
+
+2172 
+	$imp_c⁄fig
+()
+
+2174 
+	`mem£t
+(&
+ucfg
+, 0, (
+Uˇmîa_Cfg
+));
+
+2175 i‡(
+	`uˇmîa_lﬂd_c⁄fig
+(&
+ucfg
+))
+
+2176 
+	`Uˇmîa_LOG
+("ucameraÜoad config failed!\n");
+
+2180 
+	}
+}
+
+2182 
 	$uvc_sy°em_öô
 ()
 
-2173 
-Uˇmîa_Cfg
- 
-ucfg
-;
-
-2174 
+2184 
 Uˇmîa_Video_CB_Func
  
 v_func
 ;
 
-2175 
+2185 
 Uˇmîa_Audio_CB_Func
  
 a_func
 ;
 
-2176 
-	`mem£t
-(&
-ucfg
-, 0, (
-Uˇmîa_Cfg
-));
-
-2177 
+2186 
 	`mem£t
 (&
 v_func
@@ -351657,7 +351677,7 @@ v_func
 Uˇmîa_Video_CB_Func
 ));
 
-2178 
+2187 
 	`mem£t
 (&
 a_func
@@ -351665,45 +351685,45 @@ a_func
 Uˇmîa_Audio_CB_Func
 ));
 
-2181 i‡(
+2190 i‡(
 	`A¡iC›y_Vîify
 ()) {
 
-2182 
+2191 
 	`Uˇmîa_LOG
 ("AntiCopy Verified failed!!!\n");
 
-2186 i‡(
+2194 i‡(
 	`uˇmîa_lﬂd_c⁄fig
 (&
 ucfg
 )) {
 
-2187 
+2195 
 	`Uˇmîa_LOG
 ("ucameraÜoad config failed!\n");
 
-2191 i‡(
+2202 i‡(
 	`uˇmîa_uvc_pu_©å_lﬂd
 ()) {
 
-2192 
+2203 
 	`Uˇmîa_LOG
 ("[ERROR]Üoad uvc PUáttr failed.\n");
 
-2196 i‡(
+2207 i‡(
 	`kiva_gíî©e_vîsi⁄
 ())
 
-2197 
+2208 
 	`Uˇmîa_LOG
 ("[Warning] kiva generate version is failed\n");
 
-2199 i‡(
+2210 i‡(
 g_S≥ak
 )
 
-2200 
+2211 
 ucfg
 .
 pcfg
@@ -351713,7 +351733,7 @@ Pid
 PRODUCT_ID
  + 1;
 
-2202 
+2213 
 ucfg
 .
 pcfg
@@ -351723,7 +351743,7 @@ Pid
 PRODUCT_ID
 ;
 
-2203 
+2214 
 ucfg
 .
 pcfg
@@ -351733,7 +351753,7 @@ Vid
 VENDOR_ID
 ;
 
-2204 
+2215 
 ucfg
 .
 pcfg
@@ -351743,7 +351763,7 @@ vîsi⁄
 DEVICE_BCD
 ;
 
-2205 
+2216 
 	`°r˝y
 (
 ucfg
@@ -351755,7 +351775,7 @@ m™uÁ˘uªr
 m™uÁ˘_œbñ
 );
 
-2206 
+2217 
 	`°r˝y
 (
 ucfg
@@ -351767,7 +351787,7 @@ pcfg
 ¥odu˘_œbñ
 );
 
-2207 
+2218 
 	`°r˝y
 (
 ucfg
@@ -351779,7 +351799,7 @@ pcfg
 £rül_œbñ
 );
 
-2208 
+2219 
 	`°r˝y
 (
 ucfg
@@ -351791,7 +351811,7 @@ video_«me
 video_devi˚_«me
 );
 
-2209 
+2220 
 	`°r˝y
 (
 ucfg
@@ -351803,7 +351823,7 @@ audio_«me
 audio_devi˚_«me
 );
 
-2211 
+2222 
 ucfg
 .
 acfg
@@ -351815,7 +351835,7 @@ mic_vﬁume
 Mic_Vﬁume
 );
 
-2212 
+2223 
 ucfg
 .
 acfg
@@ -351827,11 +351847,11 @@ acfg
 Spk_Vﬁume
 );
 
-2213 i‡(
+2224 i‡(
 g_S≥ak
 )
 
-2214 
+2225 
 ucfg
 .
 acfg
@@ -351839,7 +351859,7 @@ acfg
 •ók_íabÀ
  = 1;
 
-2216 
+2227 
 ucfg
 .
 acfg
@@ -351847,13 +351867,13 @@ acfg
 •ók_íabÀ
  = 0;
 
-2218 
+2229 
 	`Uˇmîa_C⁄fig
 (&
 ucfg
 );
 
-2219 
+2230 
 	`Uˇmîa_Inô
 (
 UVC_BUF_NUM
@@ -351861,7 +351881,7 @@ UVC_BUF_NUM
 UVC_BUF_SIZE
 );
 
-2221 
+2232 
 v_func
 .
 gë_YuvFøme
@@ -351869,7 +351889,7 @@ gë_YuvFøme
 ßm∂e_gë_yuv_¢≠
 ;
 
-2222 
+2233 
 v_func
 .
 gë_J≥gFøme
@@ -351877,7 +351897,7 @@ gë_J≥gFøme
 ßm∂e_gë_j≥g_¢≠
 ;
 
-2223 
+2234 
 v_func
 .
 gë_H264Føme
@@ -351885,13 +351905,13 @@ gë_H264Føme
 ßm∂e_gë_h264_¢≠
 ;
 
-2224 
+2235 
 	`Uˇmîa_Video_Regesô_CB
 (&
 v_func
 );
 
-2226 
+2237 
 backlight_com≥ns
 .
 £t
@@ -351899,7 +351919,7 @@ backlight_com≥ns
 ßm∂e_video_backlight_com≥ns_£t
 ;
 
-2227 
+2238 
 backlight_com≥ns
 .
 gë
@@ -351907,7 +351927,7 @@ gë
 ßm∂e_video_backlight_com≥ns_gë
 ;
 
-2228 
+2239 
 brighäess
 .
 £t
@@ -351915,7 +351935,7 @@ brighäess
 ßm∂e_video_brighäess_£t
 ;
 
-2229 
+2240 
 brighäess
 .
 gë
@@ -351923,7 +351943,7 @@ gë
 ßm∂e_video_brighäess_gë
 ;
 
-2230 
+2241 
 c⁄åa°
 .
 £t
@@ -351931,7 +351951,7 @@ c⁄åa°
 ßm∂e_video_c⁄åa°_£t
 ;
 
-2231 
+2242 
 c⁄åa°
 .
 gë
@@ -351939,7 +351959,7 @@ gë
 ßm∂e_video_c⁄åa°_gë
 ;
 
-2232 
+2243 
 ßtuøti⁄
 .
 £t
@@ -351947,7 +351967,7 @@ gë
 ßm∂e_video_ßtuøti⁄_£t
 ;
 
-2233 
+2244 
 ßtuøti⁄
 .
 gë
@@ -351955,7 +351975,7 @@ gë
 ßm∂e_video_ßtuøti⁄_gë
 ;
 
-2234 
+2245 
 sh¨≤ess
 .
 £t
@@ -351963,7 +351983,7 @@ sh¨≤ess
 ßm∂e_video_sh¨≤ess_£t
 ;
 
-2235 
+2246 
 sh¨≤ess
 .
 gë
@@ -351971,11 +351991,11 @@ gë
 ßm∂e_video_sh¨≤ess_gë
 ;
 
-2236 #ifde‡
+2247 #ifde‡
 T31
 
 
-2237 
+2248 
 hue
 .
 £t
@@ -351983,7 +352003,7 @@ hue
 ßm∂e_video_hue_£t
 ;
 
-2238 
+2249 
 hue
 .
 gë
@@ -351991,7 +352011,7 @@ gë
 ßm∂e_video_hue_gë
 ;
 
-2240 
+2251 
 whôebÆ™˚
 .
 £t
@@ -351999,7 +352019,7 @@ whôebÆ™˚
 ßm∂e_video_whôebÆ™˚_£t
 ;
 
-2241 
+2252 
 whôebÆ™˚
 .
 gë
@@ -352007,7 +352027,7 @@ gë
 ßm∂e_video_whôebÆ™˚_gë
 ;
 
-2242 
+2253 
 powîlöe‰eq
 .
 £t
@@ -352015,7 +352035,7 @@ powîlöe‰eq
 ßm∂e_video_powîlöe‰eq_£t
 ;
 
-2243 
+2254 
 powîlöe‰eq
 .
 gë
@@ -352023,7 +352043,7 @@ gë
 ßm∂e_video_powîlöe‰eq_gë
 ;
 
-2244 
+2255 
 gamma_pu
 .
 £t
@@ -352031,7 +352051,7 @@ gamma_pu
 ßm∂e_video_gamma_£t
 ;
 
-2245 
+2256 
 gamma_pu
 .
 gë
@@ -352039,7 +352059,7 @@ gë
 ßm∂e_video_gamma_gë
 ;
 
-2246 
+2257 
 focus
 .
 £t
@@ -352047,7 +352067,7 @@ focus
 ßm∂e_video_focus_£t
 ;
 
-2247 
+2258 
 focus
 .
 gë
@@ -352055,7 +352075,7 @@ gë
 ßm∂e_video_focus_gë
 ;
 
-2248 
+2259 
 focus_auto
 .
 £t
@@ -352063,7 +352083,7 @@ focus_auto
 ßm∂e_video_focus_auto_£t
 ;
 
-2249 
+2260 
 focus_auto
 .
 gë
@@ -352071,11 +352091,11 @@ gë
 ßm∂e_video_focus_auto_gë
 ;
 
-2250 #i‚de‡
+2261 #i‚de‡
 T20
 
 
-2251 
+2262 
 exposuª_time
 .
 £t
@@ -352083,7 +352103,7 @@ exposuª_time
 ßm∂e_video_exposuª_time_£t
 ;
 
-2252 
+2263 
 exposuª_time
 .
 gë
@@ -352091,7 +352111,7 @@ gë
 ßm∂e_video_exposuª_time_gë
 ;
 
-2253 
+2264 
 auto_exposuª_mode
 .
 £t
@@ -352099,7 +352119,7 @@ auto_exposuª_mode
 ßm∂e_video_auto_exposuª_mode_£t
 ;
 
-2254 
+2265 
 auto_exposuª_mode
 .
 gë
@@ -352107,11 +352127,11 @@ gë
 ßm∂e_video_auto_exposuª_mode_gë
 ;
 
-2256 #ifde‡
+2267 #ifde‡
 T31
 
 
-2257 
+2268 
 zoom
 .
 £t
@@ -352119,7 +352139,7 @@ zoom
 ßm∂e_video_zoom_£t
 ;
 
-2258 
+2269 
 zoom
 .
 gë
@@ -352127,49 +352147,49 @@ gë
 ßm∂e_video_zoom_gë
 ;
 
-2261 
+2272 
 	`Uˇmîa_Video_Regesô_Pro˚ss_Unô_CB
 (
 Pu_˘æ
 );
 
-2262 
+2273 
 	`Uˇmîa_Video_Regesô_Camîa_TîmöÆ_CB
 (
 Ct_˘æ
 );
 
-2265 
+2276 
 	`UCamîa_Regi°e_Evít_Pro˚ss_CB
 (
 uvc_evít_¥o˚ss
 );
 
-2266 #ifde‡
+2277 #ifde‡
 T20
 
 
-2267 
+2278 
 	`ßm∂e_sy°em_öô
 ();
 
-2269 
+2280 
 	`UCamîa_Video_Sèπ
 ();
 
-2271 i‡(
+2282 i‡(
 g_Audio
  == 1) {
 
-2272 #ifde‡
+2283 #ifde‡
 T31
 
 
-2273 i‡(
+2284 i‡(
 g_dmic
 )
 
-2274 
+2285 
 a_func
 .
 gë_AudioPcm
@@ -352177,7 +352197,7 @@ gë_AudioPcm
 ßm∂e_audio_dmic_pcm_gë
 ;
 
-2276 
+2287 
 a_func
 .
 gë_AudioPcm
@@ -352185,7 +352205,7 @@ gë_AudioPcm
 ßm∂e_audio_amic_pcm_gë
 ;
 
-2278 
+2289 
 a_func
 .
 gë_AudioPcm
@@ -352193,7 +352213,7 @@ gë_AudioPcm
 ßm∂e_audio_amic_pcm_gë
 ;
 
-2280 
+2291 
 a_func
 .
 £t_Mic_Vﬁume
@@ -352201,7 +352221,7 @@ a_func
 ßm∂e_£t_mic_vﬁume
 ;
 
-2281 
+2292 
 a_func
 .
 £t_Spk_Vﬁume
@@ -352209,7 +352229,7 @@ a_func
 ßm∂e_£t_•k_vﬁume
 ;
 
-2282 
+2293 
 a_func
 .
 £t_Mic_Muã
@@ -352217,7 +352237,7 @@ a_func
 ßm∂e_£t_mic_muã
 ;
 
-2283 
+2294 
 a_func
 .
 £t_Spk_Muã
@@ -352225,7 +352245,7 @@ a_func
 ßm∂e_£t_•k_muã
 ;
 
-2284 
+2295 
 a_func
 .
 gë_ªc‹d_⁄
@@ -352233,7 +352253,7 @@ gë_ªc‹d_⁄
 ßm∂e_gë_ªc‹d_⁄
 ;
 
-2285 
+2296 
 a_func
 .
 gë_ªc‹d_off
@@ -352241,7 +352261,7 @@ gë_ªc‹d_off
 ßm∂e_gë_ªc‹d_off
 ;
 
-2286 
+2297 
 a_func
 .
 gë_•ók_⁄
@@ -352249,7 +352269,7 @@ gë_•ók_⁄
 ßm∂e_gë_•ók_⁄
 ;
 
-2287 
+2298 
 a_func
 .
 gë_•ók_off
@@ -352257,57 +352277,57 @@ gë_•ók_off
 ßm∂e_gë_•ók_off
 ;
 
-2288 
+2299 
 	`Uˇmîa_Audio_Regesô_CB
 (&
 a_func
 );
 
-2289 #ifde‡
+2300 #ifde‡
 T20
 
 
-2290 
+2301 
 	`Uˇmîa_Audio_Sèπ
 ();
 
-2294 i‡(
+2305 i‡(
 g_Àd
 )
 
-2295 
+2306 
 	`ßm∂e_uˇmîa_Àd_öô
 (
 g_Àd
 );
 
-2296 #ifde‡
+2307 #ifde‡
 T20
 
 
-2297 i‡(
+2308 i‡(
 g_S≥ak
 )
 
-2298 
+2309 
 	`ßm∂e_audio_∂ay_°¨t
 ();
 
-2301 #i‚de‡
+2312 #i‚de‡
 T20
 
 
-2302 
+2313 
 ªt
 ;
 
-2303 
+2314 
 	`£m_öô
 (&
 uˇm_ªady_£m
 , 0, 0);
 
-2304 
+2315 
 	`sig«l
 (
 SIGUSR1
@@ -352315,7 +352335,7 @@ SIGUSR1
 sig«l_h™dÀr
 );
 
-2305 
+2316 
 	`sig«l
 (
 SIGUSR2
@@ -352323,7 +352343,7 @@ SIGUSR2
 sig«l_h™dÀr
 );
 
-2306 
+2317 
 	`sig«l
 (
 SIGTERM
@@ -352331,7 +352351,7 @@ SIGTERM
 sig«l_h™dÀr
 );
 
-2307 
+2318 
 	`sig«l
 (
 SIGKILL
@@ -352339,13 +352359,13 @@ SIGKILL
 sig«l_h™dÀr
 );
 
-2309 
+2320 
 ±hªad_t
  
 uˇm_impsdk_öô_id
 ;
 
-2310 
+2321 
 ªt
  = 
 	`±hªad_¸óã
@@ -352357,37 +352377,37 @@ NULL
 uˇm_impsdk_öô_íåy
 , NULL);
 
-2311 i‡(
+2322 i‡(
 ªt
  != 0) {
 
-2312 
+2323 
 	`Uˇmîa_LOG
 ("pthread_create failed \n");
 
-2315 
+2326 
 ±hªad_t
  
 tid_AF
 ;
 
-2316 
+2327 
 ±hªad_©å_t
  
 ©å
 ;
 
-2317 if(
+2328 if(
 af_⁄_off
  == 1){
 
-2318 
+2329 
 	`±hªad_©å_öô
 (&
 ©å
 );
 
-2319 
+2330 
 	`±hªad_©å_£tdëach°©e
 (&
 ©å
@@ -352395,7 +352415,7 @@ af_⁄_off
 PTHREAD_CREATE_DETACHED
 );
 
-2320 
+2331 
 ªt
  = 
 	`±hªad_¸óã
@@ -352409,19 +352429,19 @@ gë_video_˛¨ôy
 NULL
 );
 
-2321 i‡(
+2332 i‡(
 ªt
  != 0) {
 
-2322 
+2333 
 	`Uˇmîa_LOG
 ("pthread_createÉrr \n");
 
-2333 
+2344 
 	`u¶ìp
 (1000*1000*5);
 
-2337 
+2348 
 	}
 }
 

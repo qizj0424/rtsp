@@ -38,12 +38,12 @@
 int g_Audio = 0;
 int g_Audio_Ns = -1;
 int g_Fps_Num = SENSOR_FRAME_RATE_NUM;
-int g_VideoWidth = 1920;
-int g_VideoHeight = 1080;
-int g_i2c_addr = 0x40;
+int g_VideoWidth = SENSOR_WIDTH;
+int g_VideoHeight = SENSOR_HEIGHT;
+int g_i2c_addr = SENSOR_I2C_ADDR;
 int g_wdr = 0;
 //int g_RcMode = IMP_ENC_RC_MODE_CBR;
-int g_BitRate = 1000;
+int g_BitRate = BITRATE_720P_Kbs;
 int g_gop = SENSOR_FRAME_RATE_NUM;
 int g_adb = 0;
 int g_rndis = 0;
@@ -56,10 +56,10 @@ int Mic_Volume = 70;
 int Spk_Volume = 70;
 int g_Dynamic_Fps = 0;
 int g_Power_save = 1;
-char g_Sensor_Name[16] = "jxf37";
+char g_Sensor_Name[16] = SENSOR_NAME;
 
-extern int gconf_Main_VideoWidth;
-extern int gconf_Main_VideoHeight;
+//extern int gconf_Main_VideoWidth;
+//extern int gconf_Main_VideoHeight;
 
 //extern IMPEncoderProfile gconf_mainPayLoad;
 //extern IMPEncoderRcMode gconf_defRC;
@@ -96,7 +96,7 @@ struct chn_conf chn[FS_CHN_NUM] = {
 			    .outheight = SENSOR_HEIGHT_THIRD,
                         },
 			
-                        .outFrmRateNum = SENSOR_FRAME_RATE_NUM,
+                        .outFrmRateNum = g_Fps_Num,
 			.outFrmRateDen = SENSOR_FRAME_RATE_DEN,
 			.nrVBs = 2,
 			.type = FS_PHY_CHANNEL,

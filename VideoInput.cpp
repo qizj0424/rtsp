@@ -31,8 +31,8 @@
 
 pthread_t VideoInput::ispTuneTid = -1;
 
-int gconf_Main_VideoWidth = SENSOR_WIDTH;
-int gconf_Main_VideoHeight = SENSOR_HEIGHT;
+//int g_VideoWidth = g_VideoWidth;
+//int g_VideoHeight = g_VideoHeight;
 
 IMPEncoderProfile gconf_mainPayLoad =  IMP_ENC_PROFILE_HEVC_MAIN;
 IMPEncoderRcMode gconf_defRC = IMP_ENC_RC_MODE_CAPPED_QUALITY;
@@ -116,7 +116,7 @@ static int encoder_init(int streamNum)
         int  grpNum = 0;
 	IMPEncoderChnAttr chnAttr;
 
-	encoder_param_defalt(&chnAttr, gconf_mainPayLoad, gconf_defRC,gconf_Main_VideoWidth,gconf_Main_VideoHeight, SENSOR_FRAME_RATE_NUM, SENSOR_FRAME_RATE_DEN,BITRATE_720P_Kbs);
+	encoder_param_defalt(&chnAttr, gconf_mainPayLoad, gconf_defRC,g_VideoWidth,g_VideoHeight, g_Fps_Num, SENSOR_FRAME_RATE_DEN,g_BitRate);
 
 		/* Creat Encoder Group */
 			ret = IMP_Encoder_CreateGroup(grpNum);
@@ -148,10 +148,10 @@ static int ImpSystemInit()
 	IMPSensorInfo sensor_info;
 	
 	memset(&sensor_info, 0, sizeof(IMPSensorInfo));
-	memcpy(sensor_info.name, SENSOR_NAME, sizeof(SENSOR_NAME));
+	memcpy(sensor_info.name, g_Sensor_Name, sizeof(g_Sensor_Name));
 	sensor_info.cbus_type = SENSOR_CUBS_TYPE;
-	memcpy(sensor_info.i2c.type, SENSOR_NAME, sizeof(SENSOR_NAME));
-	sensor_info.i2c.addr = SENSOR_I2C_ADDR;
+	memcpy(sensor_info.i2c.type, g_Sensor_Name, sizeof(g_Sensor_Name));
+	sensor_info.i2c.addr = g_i2c_addr;
 
 
 	IMP_LOG_DBG(TAG, "ImpSystemInit start\n");
@@ -182,7 +182,7 @@ static int ImpSystemInit()
 		return -1;
 	}
 
-	ret = IMP_ISP_Tuning_SetSensorFPS(SENSOR_FRAME_RATE_NUM, SENSOR_FRAME_RATE_DEN);
+	ret = IMP_ISP_Tuning_SetSensorFPS(g_Fps_Num, SENSOR_FRAME_RATE_DEN);
 	if (ret < 0){
 		IMP_LOG_ERR(TAG, "failed to set sensor fps\n");
 		return -1;
@@ -206,7 +206,7 @@ static int imp_init(void)
 	/* FrameSource init */
 	IMPFSChnAttr imp_chn_attr[2];
 	imp_chn_attr[0].pixFmt = PIX_FMT_NV12;
-	imp_chn_attr[0].outFrmRateNum = SENSOR_FRAME_RATE_NUM;
+	imp_chn_attr[0].outFrmRateNum = g_Fps_Num;
 	imp_chn_attr[0].outFrmRateDen = SENSOR_FRAME_RATE_DEN;
 	imp_chn_attr[0].nrVBs = 2;
 	imp_chn_attr[0].type = FS_PHY_CHANNEL;
@@ -215,13 +215,13 @@ static int imp_init(void)
 	imp_chn_attr[0].crop.top = 0;
 	imp_chn_attr[0].crop.left = 0;
 
-	imp_chn_attr[0].crop.width = gconf_Main_VideoWidth;
-	imp_chn_attr[0].crop.height = gconf_Main_VideoHeight;
+	imp_chn_attr[0].crop.width = g_VideoWidth;
+	imp_chn_attr[0].crop.height = g_VideoHeight;
 
 	imp_chn_attr[0].scaler.enable = 0;
 
-	imp_chn_attr[0].picWidth = gconf_Main_VideoWidth;
-	imp_chn_attr[0].picHeight = gconf_Main_VideoHeight;
+	imp_chn_attr[0].picWidth = g_VideoWidth;
+	imp_chn_attr[0].picHeight = g_VideoHeight;
 
 	ret = framesource_init(imp_chn_attr);
         if (ret < 0) {
@@ -292,7 +292,7 @@ VideoInput::VideoInput(UsageEnvironment& env, int streamNum)
 	: Medium(env), fVideoSource(NULL), fpsIsStart(False), fontIsStart(False),
 	  osdIsStart(False), osdStartCnt(0), nrFrmFps(0),
 	  totalLenFps(0), startTimeFps(0), streamNum(streamNum), scheduleTid(-1),
-	  orgfrmRate(SENSOR_FRAME_RATE_NUM), hasSkipFrame(false),
+	  orgfrmRate(g_Fps_Num), hasSkipFrame(false),
 	  curPackIndex(0), requestIDR(false) {
 }
 
@@ -307,19 +307,22 @@ extern "C" {
 bool VideoInput::initialize(UsageEnvironment& env) {
 	int ret;
 
-	ret = imp_init();
-	if (ret < 0) {
-		return false;
-	}
+    //ret = imp_config();
+	//if (ret < 0) {
+    //    printf("imp_config err\n");
+	//	return false;
+	//}
     
     ret = pthread_create(&ispTuneTid, NULL, VideoInput::ispAutoTuningThread, NULL);
 	if (ret < 0) {
         printf("pthread_create err\n");
 		return false;
 	}
-    
-    
 
+	ret = imp_init();
+	if (ret < 0) 
+		return false;
+       
 	return true;
 }
 
@@ -448,7 +451,6 @@ int VideoInput::streamOn(void)
 
 	IMP_Encoder_RequestIDR(streamNum);
 	requestIDR = true;
-    printf("---------->VideoInput::streamOn<----------\n");
 
 	int ret = IMP_Encoder_StartRecvPic(streamNum);
 	if (ret < 0) {
@@ -462,7 +464,6 @@ int VideoInput::streamOn(void)
 int VideoInput::streamOff(void)
 {
 	int ret;
-    printf("---------->VideoInput::streamOff<----------\n");
 
 	if (curPackIndex != 0)
 		IMP_Encoder_ReleaseStream(streamNum, &bitStream);

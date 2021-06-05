@@ -1665,7 +1665,7 @@ static int uvc_event_process(int event_id, void *data)
 		g_Fps_Num = 10000000 / intervals;
 		if (g_led)
 			sample_ucamera_led_ctl(g_led, 0);
-#ifndef T20
+#if T20
 	int retry_cnt = 0;
 imp_init_check:
 		if (!imp_inited) {
@@ -1759,10 +1759,8 @@ void *ucam_impsdk_init_entry(void *res)
 
 	imp_inited = 1;
 	if (g_Audio == 1) {
-#ifdef T31
 		if (g_dmic)
 			sample_audio_dmic_init();
-#endif
 		sample_audio_amic_init();
 		Ucamera_Audio_Start();
 	}
@@ -2167,10 +2165,21 @@ static void *get_video_clarity(void *args)
 /* ---------------------------------------------------------------------------
  * main
  */
+struct Ucamera_Cfg ucfg;
+
+//int imp_config(void)
+//{
+//	memset(&ucfg, 0, sizeof(struct Ucamera_Cfg));
+//	if (ucamera_load_config(&ucfg)) 
+//		Ucamera_LOG("ucamera load config failed!\n");
+//	
+//    return 0;
+//
+//}
 
 int uvc_system_init(void)
 {
-	struct Ucamera_Cfg ucfg;
+    struct Ucamera_Cfg ucfg;
 	struct Ucamera_Video_CB_Func v_func;
 	struct Ucamera_Audio_CB_Func a_func;
 	memset(&ucfg, 0, sizeof(struct Ucamera_Cfg));
@@ -2187,6 +2196,10 @@ int uvc_system_init(void)
 		Ucamera_LOG("ucamera load config failed!\n");
 		return 0;
 	}
+
+    //while(!UVC_START_FLAG){
+    //    sleep(1);
+    //}
 
 	if (ucamera_uvc_pu_attr_load()) {
 		Ucamera_LOG("[ERROR] load uvc PU attr failed.\n");
@@ -2263,20 +2276,13 @@ int uvc_system_init(void)
 
 
 	UCamera_Registe_Event_Process_CB(uvc_event_process);
-#ifdef T20
-	sample_system_init();
-#endif
 	UCamera_Video_Start();
 
 	if (g_Audio == 1) {
-#ifdef T31
 		if (g_dmic)
 			a_func.get_AudioPcm = sample_audio_dmic_pcm_get;
 		else
 			a_func.get_AudioPcm = sample_audio_amic_pcm_get;
-#else
-			a_func.get_AudioPcm = sample_audio_amic_pcm_get;
-#endif
 		a_func.set_Mic_Volume = sample_set_mic_volume;
 		a_func.set_Spk_Volume = sample_set_spk_volume;
 		a_func.set_Mic_Mute = sample_set_mic_mute;
@@ -2286,17 +2292,10 @@ int uvc_system_init(void)
 		a_func.get_speak_on = sample_get_speak_on;
 		a_func.get_speak_off = sample_get_speak_off;
 		Ucamera_Audio_Regesit_CB(&a_func);
-#ifdef T20
-		Ucamera_Audio_Start();
-#endif
 	}
 
 	if (g_led)
 		sample_ucamera_led_init(g_led);
-#ifdef T20
-	if (g_Speak)
-		sample_audio_play_start();
-#endif
 
 #ifndef T20
 	int ret;
@@ -2331,7 +2330,6 @@ int uvc_system_init(void)
       	//if (g_Dynamic_Fps)
       		//imp_SensorFPS_Adapture();
         	 usleep(1000*1000*5);
-//               zjqi("hello uvc!!!");
 	}
 	return 0;
 }

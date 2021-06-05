@@ -9,6 +9,7 @@
 #include "H264VideoServerMediaSubsession.hh"
 #include "H265VideoServerMediaSubsession.hh"
 #include "VideoInput.hh"
+#include "imp-common.hh"
 #include "RTSPServer.hh"
 #include <stdio.h>
 
@@ -16,8 +17,6 @@ portNumBits rtspServerPortNum = 8554;
 char* streamDescription = strDup("RTSP/RTP stream from Ingenic Media");
 
 extern IMPEncoderProfile gconf_mainPayLoad;
-extern int gconf_Main_VideoWidth;
-extern int gconf_Main_VideoHeight;
 
 #define BR_AT_1M 2000000 //1Mbps at 1M pixel
 
@@ -51,7 +50,7 @@ int main(int argc, char** argv)
 
 
     if ((gconf_mainPayLoad >> 24) == IMP_ENC_TYPE_AVC) {
-        sms_main->addSubsession(H264VideoServerMediaSubsession::createNew(sms_main->envir(), *videoInput, calc_bit_rate(gconf_Main_VideoWidth, gconf_Main_VideoHeight)));
+        sms_main->addSubsession(H264VideoServerMediaSubsession::createNew(sms_main->envir(), *videoInput, calc_bit_rate(g_VideoWidth, g_VideoHeight)));
     } else {
         sms_main->addSubsession(H265VideoServerMediaSubsession::createNew(sms_main->envir(), *videoInput, calc_bit_rate(1920,1080)));
                                 //H265VideoServerMediaSubsession::createNew(UsageEnvironment&, VideoInput&, unsigned int)'
