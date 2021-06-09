@@ -299,13 +299,13 @@ int sample_video_zoom_set(int value)
 	zoomheight_cur = round(g_VideoHeight/sqrt(value_cur/100));
 	zoomheight_cur = round((float)(zoomheight_cur/4)) * 4;
 
-	fcrop_obj.fcrop_enable = 1;
+	fcrop_obj.fcrop_enable = 0;
 	fcrop_obj.fcrop_left = round((float)(g_VideoWidth - zoomwidth_cur) / 2);
 	fcrop_obj.fcrop_top = round((float)(g_VideoHeight -  zoomheight_cur) / 2);
 	fcrop_obj.fcrop_width = zoomwidth_cur;
 	fcrop_obj.fcrop_height = zoomheight_cur;
 
-	ret = IMP_ISP_Tuning_SetFrontCrop(&fcrop_obj);
+	//ret = IMP_ISP_Tuning_SetFrontCrop(&fcrop_obj);
 	if (ret < 0) {
 		Ucamera_LOG("IMP Set Fcrop failed=%d\n",__LINE__);
 		return -1;
@@ -1665,7 +1665,7 @@ static int uvc_event_process(int event_id, void *data)
 		g_Fps_Num = 10000000 / intervals;
 		if (g_led)
 			sample_ucamera_led_ctl(g_led, 0);
-#if T20
+#if 0
 	int retry_cnt = 0;
 imp_init_check:
 		if (!imp_inited) {
@@ -2197,9 +2197,7 @@ int uvc_system_init(void)
 		return 0;
 	}
 
-    //while(!UVC_START_FLAG){
-    //    sleep(1);
-    //}
+    UVC_START_FLAG=true;
 
 	if (ucamera_uvc_pu_attr_load()) {
 		Ucamera_LOG("[ERROR] load uvc PU attr failed.\n");
@@ -2266,7 +2264,8 @@ int uvc_system_init(void)
 	auto_exposure_mode.set = sample_video_auto_exposure_mode_set;
 	auto_exposure_mode.get = sample_video_auto_exposure_mode_get;
 #endif
-#ifdef T31
+//#ifdef T31
+#if 0
 	zoom.set = sample_video_zoom_set;
 	zoom.get = sample_video_zoom_get;
 #endif

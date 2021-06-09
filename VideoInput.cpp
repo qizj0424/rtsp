@@ -29,7 +29,7 @@
 
 #define TAG 						"sample-RTSPServer"
 
-pthread_t VideoInput::ispTuneTid = -1;
+pthread_t VideoInput::uvcTuneTid = -1;
 
 //int g_VideoWidth = g_VideoWidth;
 //int g_VideoHeight = g_VideoHeight;
@@ -147,6 +147,11 @@ static int ImpSystemInit()
 	int ret = 0;
 	IMPSensorInfo sensor_info;
 	
+    while(!UVC_START_FLAG){
+         usleep(100);
+         printf("Waiting to read config ...\n");
+    }
+       
 	memset(&sensor_info, 0, sizeof(IMPSensorInfo));
 	memcpy(sensor_info.name, g_Sensor_Name, sizeof(g_Sensor_Name));
 	sensor_info.cbus_type = SENSOR_CUBS_TYPE;
@@ -155,7 +160,7 @@ static int ImpSystemInit()
 
 
 	IMP_LOG_DBG(TAG, "ImpSystemInit start\n");
-       
+   
 	ret = IMP_ISP_Open();
 	if(ret < 0){
 		IMP_LOG_ERR(TAG, "failed to open ISP\n");
@@ -211,7 +216,7 @@ static int imp_init(void)
 	imp_chn_attr[0].nrVBs = 2;
 	imp_chn_attr[0].type = FS_PHY_CHANNEL;
 
-	imp_chn_attr[0].crop.enable = 1;
+	imp_chn_attr[0].crop.enable = 0;
 	imp_chn_attr[0].crop.top = 0;
 	imp_chn_attr[0].crop.left = 0;
 
@@ -262,7 +267,7 @@ static inline int close_stream_file(int fd)
 	return close(fd);
 }
 
-void *VideoInput::ispAutoTuningThread(void *p){
+void *VideoInput::uvcAutoTuningThread(void *p){
     int ret;	
     ret = uvc_system_init();
 	if (ret < 0) {
@@ -313,13 +318,13 @@ bool VideoInput::initialize(UsageEnvironment& env) {
 	//	return false;
 	//}
     
-    ret = pthread_create(&ispTuneTid, NULL, VideoInput::ispAutoTuningThread, NULL);
+    ret = pthread_create(&uvcTuneTid, NULL, VideoInput::uvcAutoTuningThread, NULL);
 	if (ret < 0) {
         printf("pthread_create err\n");
 		return false;
 	}
-
-	ret = imp_init();
+	
+    ret = imp_init();
 	if (ret < 0) 
 		return false;
        

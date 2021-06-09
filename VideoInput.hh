@@ -44,7 +44,7 @@ public:
 
 public:
   static pthread_t cmdTid;
-  static pthread_t ispTuneTid;
+  static pthread_t uvcTuneTid;
   static Boolean fFontAvailable;
   static Boolean fCoverAvailable;
   static Boolean fPicAvailable;
@@ -91,7 +91,7 @@ private:
   virtual ~VideoInput();
   static bool initialize(UsageEnvironment& env);
   static void *cmdListenThread(void *p);
-  static void *ispAutoTuningThread(void *p);
+  static void *uvcAutoTuningThread(void *p);
 
 private:
   static Boolean fHaveInitialized;

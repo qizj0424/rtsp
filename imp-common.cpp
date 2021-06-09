@@ -57,6 +57,7 @@ int Spk_Volume = 70;
 int g_Dynamic_Fps = 0;
 int g_Power_save = 1;
 char g_Sensor_Name[16] = SENSOR_NAME;
+bool UVC_START_FLAG=false;
 
 //extern int gconf_Main_VideoWidth;
 //extern int gconf_Main_VideoHeight;

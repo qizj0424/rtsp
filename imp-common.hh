@@ -44,18 +44,20 @@ extern int g_Dynamic_Fps;
 extern int g_Power_save;
 extern char g_Sensor_Name[16];
 
+
+extern bool UVC_START_FLAG;
 extern  IMPEncoderRcMode g_RcMode;
 
 #define SENSOR_FRAME_RATE_NUM	25
 #define SENSOR_FRAME_RATE_NUM_30	30
 #define SENSOR_FRAME_RATE_DEN		1
 
-#define SENSOR_SC3335
+#define SENSOR_GC2053
 #define CHN0_EN                 1
 #define CROP_EN					1
 
-#if defined SENSOR_JXF37
-#define SENSOR_NAME				"jxf37"
+#if defined SENSOR_JXF23
+#define SENSOR_NAME				"jxf23"
 #define SENSOR_CUBS_TYPE        TX_SENSOR_CONTROL_INTERFACE_I2C
 #define SENSOR_I2C_ADDR			0x40
 #define SENSOR_WIDTH			1920
