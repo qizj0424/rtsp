@@ -2165,7 +2165,7 @@ static void *get_video_clarity(void *args)
 /* ---------------------------------------------------------------------------
  * main
  */
-struct Ucamera_Cfg ucfg;
+//struct Ucamera_Cfg ucfg;
 
 //int imp_config(void)
 //{
