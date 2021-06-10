@@ -29,10 +29,9 @@
 
 #define TAG 						"sample-RTSPServer"
 
-pthread_t VideoInput::uvcTuneTid = -1;
+#define UVC
 
-//int g_VideoWidth = g_VideoWidth;
-//int g_VideoHeight = g_VideoHeight;
+pthread_t VideoInput::uvcTuneTid = -1;
 
 IMPEncoderProfile gconf_mainPayLoad =  IMP_ENC_PROFILE_HEVC_MAIN;
 IMPEncoderRcMode gconf_defRC = IMP_ENC_RC_MODE_CAPPED_QUALITY;
@@ -146,12 +145,14 @@ static int ImpSystemInit()
 {
 	int ret = 0;
 	IMPSensorInfo sensor_info;
-	
+
+#ifdef UVC
     while(!UVC_START_FLAG){
          usleep(100);
          printf("Waiting to read config ...\n");
     }
-       
+#endif
+
 	memset(&sensor_info, 0, sizeof(IMPSensorInfo));
 	memcpy(sensor_info.name, g_Sensor_Name, sizeof(g_Sensor_Name));
 	sensor_info.cbus_type = SENSOR_CUBS_TYPE;
@@ -312,22 +313,18 @@ extern "C" {
 bool VideoInput::initialize(UsageEnvironment& env) {
 	int ret;
 
-    //ret = imp_config();
-	//if (ret < 0) {
-    //    printf("imp_config err\n");
-	//	return false;
-	//}
-    
+#ifdef UVC   
     ret = pthread_create(&uvcTuneTid, NULL, VideoInput::uvcAutoTuningThread, NULL);
 	if (ret < 0) {
         printf("pthread_create err\n");
 		return false;
 	}
-	
+#endif
+
     ret = imp_init();
 	if (ret < 0) 
 		return false;
-       
+
 	return true;
 }
 
