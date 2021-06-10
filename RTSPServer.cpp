@@ -52,7 +52,7 @@ int main(int argc, char** argv)
     if ((gconf_mainPayLoad >> 24) == IMP_ENC_TYPE_AVC) {
         sms_main->addSubsession(H264VideoServerMediaSubsession::createNew(sms_main->envir(), *videoInput, calc_bit_rate(g_VideoWidth, g_VideoHeight)));
     } else {
-        sms_main->addSubsession(H265VideoServerMediaSubsession::createNew(sms_main->envir(), *videoInput, calc_bit_rate(1920,1080)));
+        sms_main->addSubsession(H265VideoServerMediaSubsession::createNew(sms_main->envir(), *videoInput, calc_bit_rate(g_VideoWidth, g_VideoHeight)));
                                 //H265VideoServerMediaSubsession::createNew(UsageEnvironment&, VideoInput&, unsigned int)'
     }
 

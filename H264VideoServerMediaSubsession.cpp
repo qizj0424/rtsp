@@ -14,8 +14,6 @@
 #include "VideoInput.hh"
 #include "imp-common.hh"
 
-//extern int g_VideoWidth;
-//extern int g_VideoHeight;
 
 H264VideoServerMediaSubsession*
 H264VideoServerMediaSubsession
