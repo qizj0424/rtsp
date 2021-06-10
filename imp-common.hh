@@ -141,6 +141,8 @@ extern  IMPEncoderRcMode g_RcMode;
 #define STREAM_FILE_PATH_PREFIX		"/tmp"
 #define SNAP_FILE_PATH_PREFIX		"/tmp"
 
+#define UVC_LICENSE_PATH_PREFIX		"/tmp/uvc_license"
+
 #define OSD_REGION_WIDTH		16
 #define OSD_REGION_HEIGHT		34
 #define OSD_REGION_WIDTH_SEC		8

@@ -10,10 +10,8 @@
  *	(at your option) any later version.
  */
 
-#ifndef _USBCAMERA_H_
-#define _USBCAMERA_H_
-
-
+#ifndef _ADK_USBCAMERA_H_
+#define _ADK_USBCAMERA_H_
 #include <stdint.h>
 
 #ifdef __cplusplus
@@ -38,7 +36,7 @@ extern "C"
 #define UVC_GAMMA_CONTROL					0x09
 #define UVC_WHITE_BALANCE_TEMPERATURE_CONTROL			0x0a
 #define UVC_WHITE_BALANCE_TEMPERATURE_AUTO_CONTROL		0x0b
-#define UVC_DIGITAL_MULTIPLIER_CONTROL          		0x0e
+#define UVC_DIGITAL_MULTIPLIER_CONTROL				0x0e
 
 /*uvc extension unit cs*/
 #define UVC_EU_CMD_USR1		0x01
@@ -70,9 +68,6 @@ extern "C"
 
 #define Ucamera_LOG(format, arg...)                                            \
 	printf("%s: " format "\n" , "[Ucamera]", ## arg)
-
-#define zjqi(format, arg...)                                            \
-	printf("%s: ------>" format "<------\n" , "[zjqi]", ## arg)
 
 struct Ucamera_YUYV_Param {
 	uint32_t width;
@@ -203,7 +198,7 @@ struct Ucamera_Video_CT_Control {
 
 int Ucamera_Config(struct Ucamera_Cfg *ucfg);
 
-int Ucamera_Init(int FrmNum, int FrmMaxSize);
+int Ucamera_Init_Adk(int FrmNum, int FrmMaxSize, char *license_path);
 
 int Ucamera_Video_Regesit_CB(struct Ucamera_Video_CB_Func *v_func);
 
@@ -229,9 +224,12 @@ int Ucamera_Audio_Start(void);
 int Ucamera_DeInit(void);
 
 int Ucamera_Hid_Init(void);
+
 #ifdef __cplusplus
 #if __cplusplus
 }
 #endif
 #endif /* __cplusplus */
-#endif /* _USBCAMERA_H_ */
+
+
+#endif /*_ADK_USBCAMERA_H_ */

@@ -2227,7 +2227,7 @@ int uvc_system_init(void)
 		ucfg.acfg.speak_enable = 0;
 
 	Ucamera_Config(&ucfg);
-	Ucamera_Init(UVC_BUF_NUM, UVC_BUF_SIZE);
+	Ucamera_Init_Adk(UVC_BUF_NUM, UVC_BUF_SIZE,UVC_LICENSE_PATH_PREFIX);
 
 	v_func.get_YuvFrame = sample_get_yuv_snap;
 	v_func.get_JpegFrame = sample_get_jpeg_snap;
