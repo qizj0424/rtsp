@@ -1,7 +1,5 @@
 
-
 Target = UVC_NET_camera 
-COPY_PATH = ~/nfs_shared/
 
 CROSS_COMPILE ?= mips-linux-gnu-
 COMPILE_TYPE ?= uclibc
@@ -21,16 +19,6 @@ CFLAGS = -O2 -Wall -march=mips32r2
 ifeq ($(HOST), T31)
 	SDK_DIR := t31_sdk
 	CFLAGS += -DT31
-endif
-
-ifeq ($(HOST), T21)
-	SDK_DIR := t21_sdk
-	CFLAGS += -DT21
-endif
-
-ifeq ($(HOST), T20)
-	SDK_DIR := t20_sdk
-	CFLAGS += -DT20
 endif
 
 ifeq ($(COMPILE_TYPE), uclibc)
@@ -57,8 +45,6 @@ LIBS := -L./$(SDK_DIR)/lib/$(COMPILE_TYPE) -limp -lalog -lsysutils \
 
 LIBS += -lpthread -lm -lrt -ldl
 
-
-
 $(Target) : $(object_file)
 	$(CXX) $^ $(CFLAGS) ${LIBS} -o $@
 
@@ -71,5 +57,3 @@ clean:
 	-rm -rf $(Target)
 	-rm -rf *.o
 
-cp:
-	cp ./$(Target) $(COPY_PATH)
